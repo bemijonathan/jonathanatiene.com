@@ -1,69 +1,124 @@
-import Image from "next/image";
+import Link from "next/link";
+import { getFeaturedArticles, getLatestArticles } from "@/lib/content";
+import { site } from "@/lib/site";
 
-export default function Home() {
+const currentlyExploring = [
+  "Agentic memory",
+  "Behavioural intelligence",
+  "AI system reliability",
+  "Human decision-making",
+  "Technical stylistics",
+];
+
+export default async function HomePage() {
+  const [featured] = await getFeaturedArticles();
+  const latest = (await getLatestArticles(4)).filter((a) => a.slug !== featured?.slug).slice(0, 3);
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <div className="mx-auto max-w-4xl px-6 py-20 sm:py-28">
+      {/* Hero */}
+      <section className="max-w-2xl">
+        <h1 className="font-serif text-4xl leading-[1.1] tracking-tight text-foreground sm:text-5xl">
+          {site.name}
+        </h1>
+        <p className="mt-3 font-sans text-lg text-muted">{site.descriptor}</p>
+        <p className="mt-6 max-w-xl font-serif text-lg leading-relaxed text-foreground/90">
+          {site.tagline}
+        </p>
+        <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm">
+          <Link
+            href="/writing"
+            className="text-accent underline decoration-1 underline-offset-4 hover:text-accent-hover"
           >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            Read my writing →
+          </Link>
+          <Link href="/about" className="text-muted hover:text-foreground">
+            About me
+          </Link>
         </div>
-      </main>
+      </section>
+
+      {/* Featured */}
+      {featured ? (
+        <section className="mt-24">
+          <SectionLabel>Featured</SectionLabel>
+          <Link href={`/writing/${featured.slug}`} className="group mt-4 block">
+            <h2 className="font-serif text-3xl leading-tight tracking-tight text-foreground transition-colors group-hover:text-accent">
+              {featured.title}
+            </h2>
+            <p className="mt-3 max-w-2xl font-serif text-lg leading-relaxed text-muted">
+              {featured.description}
+            </p>
+            <p className="mt-3 font-sans text-xs uppercase tracking-widest text-subtle">
+              {featured.topics[0] ?? "Writing"} · {featured.readingTimeMinutes} min
+            </p>
+          </Link>
+
+          {latest.length > 0 ? (
+            <ul className="mt-10 space-y-6 border-t border-border pt-8">
+              {latest.map((a) => (
+                <li key={a.slug}>
+                  <Link
+                    href={`/writing/${a.slug}`}
+                    className="group flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between sm:gap-8"
+                  >
+                    <span className="font-serif text-xl leading-snug text-foreground transition-colors group-hover:text-accent">
+                      {a.title}
+                    </span>
+                    <span className="font-sans text-xs uppercase tracking-widest text-subtle whitespace-nowrap">
+                      {a.topics[0] ?? "Writing"}
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          ) : null}
+        </section>
+      ) : null}
+
+      {/* Currently exploring */}
+      <section className="mt-24">
+        <SectionLabel>Currently exploring</SectionLabel>
+        <ul className="mt-6 flex flex-wrap gap-x-6 gap-y-2 font-serif text-lg text-foreground/90">
+          {currentlyExploring.map((topic) => (
+            <li key={topic}>{topic}</li>
+          ))}
+        </ul>
+      </section>
+
+      {/* Newsletter */}
+      <section className="mt-24 border-t border-border pt-10">
+        <SectionLabel>Essays in your inbox</SectionLabel>
+        <p className="mt-4 max-w-xl font-serif text-lg text-muted">
+          Occasional writing about intelligent systems, engineering and human behaviour.
+        </p>
+        <form
+          action="https://bemijonathan.substack.com/api/v1/free"
+          method="post"
+          target="_blank"
+          className="mt-6 flex max-w-md flex-col gap-3 sm:flex-row"
+        >
+          <input
+            type="email"
+            name="email"
+            required
+            placeholder="your@email.com"
+            className="flex-1 border-b border-border bg-transparent px-1 py-2 font-sans text-base placeholder:text-subtle focus:border-accent focus:outline-none"
+          />
+          <button
+            type="submit"
+            className="font-sans text-sm uppercase tracking-widest text-accent hover:text-accent-hover"
+          >
+            Subscribe →
+          </button>
+        </form>
+      </section>
     </div>
+  );
+}
+
+function SectionLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <p className="font-sans text-xs uppercase tracking-[0.18em] text-subtle">{children}</p>
   );
 }
