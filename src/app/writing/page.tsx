@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getAllArticles, getFeaturedArticles, getTopics } from "@/lib/content";
+import { getAllArticles, getFeaturedArticles, getTopics, topicToSlug } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "Writing",
@@ -72,9 +72,16 @@ export default async function WritingIndex() {
       {topics.length > 0 ? (
         <section className="mt-20">
           <Label>Topics</Label>
-          <ul className="mt-4 flex flex-wrap gap-x-6 gap-y-2 font-serif text-lg text-foreground/90">
+          <ul className="mt-4 flex flex-wrap gap-x-6 gap-y-2 font-serif text-lg">
             {topics.map((t) => (
-              <li key={t}>{t}</li>
+              <li key={t}>
+                <Link
+                  href={`/writing/topics/${topicToSlug(t)}`}
+                  className="text-foreground/90 hover:text-accent"
+                >
+                  {t}
+                </Link>
+              </li>
             ))}
           </ul>
         </section>

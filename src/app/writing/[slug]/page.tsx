@@ -2,11 +2,22 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { MDXRemote } from "next-mdx-remote/rsc";
-import { getAllArticles, getArticleBySlug } from "@/lib/content";
+import {
+  getAllArticles,
+  getArticleBySlug,
+  getRelatedArticles,
+  topicToSlug,
+} from "@/lib/content";
 import { mdxComponents } from "@/components/mdx";
 import { mdxOptions } from "@/lib/mdx-options";
-import { articleJsonLd, breadcrumbJsonLd } from "@/lib/seo";
+import { articleJsonLd, breadcrumbJsonLd, jsonLdString } from "@/lib/seo";
 import { site } from "@/lib/site";
+import { extractToc } from "@/lib/toc";
+import { TableOfContents } from "@/components/toc";
+import { Breadcrumbs } from "@/components/breadcrumbs";
+import { RelatedArticles } from "@/components/related-articles";
+
+const TOC_MIN_WORDS = 1200;
 
 export async function generateStaticParams() {
   const all = await getAllArticles();
@@ -62,20 +73,36 @@ export default async function ArticlePage(
     year: "numeric",
   });
 
+  const toc = article.wordCount >= TOC_MIN_WORDS ? extractToc(article.content) : [];
+  const related = await getRelatedArticles(article.slug, 3);
+
   return (
     <article className="mx-auto max-w-3xl px-6 py-16 sm:py-24">
-      <header className="max-w-2xl">
+      <Breadcrumbs
+        crumbs={[
+          { name: "Home", href: "/" },
+          { name: "Writing", href: "/writing" },
+          { name: article.title },
+        ]}
+      />
+
+      <header className="mt-6 max-w-2xl">
         {article.topics[0] ? (
-          <p className="font-sans text-xs uppercase tracking-[0.18em] text-accent">
+          <Link
+            href={`/writing/topics/${topicToSlug(article.topics[0])}`}
+            className="font-sans text-xs uppercase tracking-[0.18em] text-accent hover:text-accent-hover"
+          >
             {article.topics[0]}
-          </p>
+          </Link>
         ) : null}
         <h1 className="mt-4 font-serif text-4xl leading-[1.15] tracking-tight text-foreground sm:text-5xl">
           {article.title}
         </h1>
-        <p className="mt-5 font-serif text-xl leading-relaxed text-muted">
-          {article.description}
-        </p>
+        {article.description ? (
+          <p className="mt-5 font-serif text-xl leading-relaxed text-muted">
+            {article.description}
+          </p>
+        ) : null}
         <p className="mt-6 font-sans text-sm text-subtle">
           {site.name}
           <span className="mx-2">·</span>
@@ -87,6 +114,8 @@ export default async function ArticlePage(
 
       <hr className="my-12 border-border" />
 
+      <TableOfContents headings={toc} />
+
       <div className="prose">
         <MDXRemote
           source={article.content}
@@ -95,7 +124,23 @@ export default async function ArticlePage(
         />
       </div>
 
-      <footer className="mt-20 border-t border-border pt-8">
+      {article.topics.length > 0 ? (
+        <p className="mt-16 flex flex-wrap gap-x-4 gap-y-2 font-sans text-xs uppercase tracking-widest">
+          {article.topics.map((t) => (
+            <Link
+              key={t}
+              href={`/writing/topics/${topicToSlug(t)}`}
+              className="text-subtle hover:text-accent"
+            >
+              #{t}
+            </Link>
+          ))}
+        </p>
+      ) : null}
+
+      <RelatedArticles articles={related} />
+
+      <footer className="mt-16 border-t border-border pt-8">
         <Link href="/writing" className="font-sans text-sm text-muted hover:text-foreground">
           ← All writing
         </Link>
@@ -103,12 +148,12 @@ export default async function ArticlePage(
 
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd(article)) }}
+        dangerouslySetInnerHTML={{ __html: jsonLdString(articleJsonLd(article)) }}
       />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(
+          __html: jsonLdString(
             breadcrumbJsonLd([
               { name: "Home", path: "/" },
               { name: "Writing", path: "/writing" },

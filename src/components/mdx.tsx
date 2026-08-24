@@ -1,13 +1,13 @@
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
 import Image from "next/image";
-import Link from "next/link";
 
 function A({ href = "", ...rest }: ComponentPropsWithoutRef<"a">) {
-  const isExternal = /^https?:\/\//.test(href) && !href.includes("bemijonathan.com");
+  const isExternal =
+    /^https?:\/\//.test(href) && !href.includes("jonathanatiene.com");
   if (isExternal) {
     return <a href={href} target="_blank" rel="noopener noreferrer" {...rest} />;
   }
-  return <Link href={href} {...rest} />;
+  return <a href={href} {...rest} />;
 }
 
 function Callout({

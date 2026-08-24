@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 import { site } from "@/lib/site";
-import { getAllArticles } from "@/lib/content";
+import { getAllArticles, getTopics, topicToSlug } from "@/lib/content";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
@@ -25,8 +25,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     url: `${site.url}/writing/${a.slug}`,
     lastModified: new Date(a.updated ?? a.date),
     changeFrequency: "yearly",
-    priority: 0.8,
+    priority: a.featured ? 0.9 : a.archived ? 0.5 : 0.8,
   }));
 
-  return [...staticRoutes, ...articleRoutes];
+  const topics = await getTopics();
+  const topicRoutes: MetadataRoute.Sitemap = topics.map((t) => ({
+    url: `${site.url}/writing/topics/${topicToSlug(t)}`,
+    lastModified: now,
+    changeFrequency: "monthly",
+    priority: 0.6,
+  }));
+
+  return [...staticRoutes, ...articleRoutes, ...topicRoutes];
 }

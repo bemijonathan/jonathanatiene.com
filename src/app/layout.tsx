@@ -3,7 +3,7 @@ import { Geist, Geist_Mono, Spectral } from "next/font/google";
 import { Providers } from "./providers";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
-import { personJsonLd } from "@/lib/seo";
+import { personJsonLd, jsonLdString } from "@/lib/seo";
 import { site } from "@/lib/site";
 import "./globals.css";
 
@@ -85,7 +85,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         </Providers>
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd()) }}
+          dangerouslySetInnerHTML={{ __html: jsonLdString(personJsonLd()) }}
         />
       </body>
     </html>

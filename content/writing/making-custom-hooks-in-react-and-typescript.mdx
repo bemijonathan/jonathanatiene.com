@@ -1,0 +1,633 @@
+---
+title: Making Custom Hooks in React and Typescript
+description: "Create 4 custom hooks with React and Typescript In this tutorial, i will be teaching you how to create custom hooks with react and typescript with 4 different cases.... Let's go 🔥 Perquisites knowle"
+topics: ["Career / Engineering"]
+date: 2023-01-08
+slug: making-custom-hooks-in-react-and-typescript
+archived: true
+originalUrl: "https://jonathanatiene.tech/making-custom-hooks-in-react-and-typescript"
+alsoPublishedAt: ["https://dev.to/mixed_code/making-custom-hooks-in-react-and-typescript-2pjf"]
+---
+# Create 4 custom hooks with React and Typescript
+
+In this tutorial, i will be teaching you how to create custom hooks with react and typescript with 4 different cases.... Let's go 🔥
+
+Perquisites
+
+1.  knowledge of React, Javascript and ES6
+    
+2.  Knowledge of React Hooks
+    
+3.  Knowledge of Typescript (fine but not recommended)
+    
+
+In this tutorial we will be building 4 custom Hooks
+
+1.  Fetch hook
+    
+2.  Input Field Hook
+    
+3.  Drop down Hook
+    
+4.  Auth Hook
+    
+
+So let us go ahead and start a new project using the create-react-app typescript template, hop into your terminals lets create magic
+
+```
+# we will be creating an app called hooks
+yarn create react-app my-app --template typescript
+
+cd hooks && yarn start
+
+#You can now view hooks in the browser.
+
+ # Local:            http://localhost:3000
+  #On Your Network:  http://192.168.1.100:3000
+
+#Note that the development build is not optimized.
+#To create a production build, use yarn build.
+```
+
+Next change the content of App.tsx to
+
+```
+//App.tsx
+import React from "react";
+import "./App.css";
+
+function App() {
+    return (
+        <div className="App">
+
+        </div>
+    );
+}
+
+export default App;
+```
+
+First we would build a custom fetch hook
+
+1.  ### **FETCH HOOK**
+    
+    This type of hook is mostly used to communicate with resources from an endpoint rather than importing Axios in every file or using the browser fetch API, we can easily make a useFetchHook that returns the result of every request we would use in our application for the sake of this tutorial we will only be using two types of request the GET and POST requests respectively.
+    
+    C**reating our Fetch Hook**
+    
+    Lets start by creating our Fetch Component
+    
+    ```
+     mkdir src/component && mkdir src/customHooks
+     #this command creates a component and a customHook folder
+    
+     touch src/component/fetchComponent.tsx 
+     #this creates a fetchComponent.tsx File
+    
+     touch src/customHooks/useFectchHook.tsx
+     #this creates a useFetchHook.tsx file
+    ```
+    
+    so this the idea behind the work flow we want to be able to make a server call to an endpoint on events like when the page mounts or when a button is clicked while being able to use the same hook with different HTTP methods like post or Patch.
+    
+    creating the FetchHook
+    
+    ```
+     //useFectchHook.tsx
+    
+     import { useState } from "react";
+    
+     export type HTTPmethods = "put" 
+     | "patch" 
+     | "post" 
+     | "get" 
+     | "delete";
+    
+     export const useFetchHook = <T>(
+         body?: Record<string, unknown>
+     ): [
+         T | T[],
+         boolean,
+         boolean,
+         (url: string, method: HTTPmethods) => Promise<void>
+     ] => {
+         const [data, setData] = useState<T | T[]>([]);
+         const [loading, setLoading] = useState<boolean>(false);
+         const [error, setError] = useState<boolean>(false);
+    
+         const fetchResourse = async 
+            (url: string, method: HTTPmethods) => {
+             if (url.length) {
+                 setLoading(true);
+                 try {
+                     let response;
+                     switch (method) {
+                         case "get":
+                             response = await fetch(url);
+                             break;
+                         default:
+                             response = await fetch(url, {
+                                 method: method,
+                                 body,
+                             });
+    
+                             break;
+                     }
+                     let d: T | T[] = await response.json();
+                     setData(d);
+                 } catch (error) {
+                     setError(true);
+                 } finally {
+                     setLoading(false);
+                 }
+             }
+         };
+    
+         return [data, loading, error, fetchResourse];
+     };
+    ```
+    
+    woah! whats all this trash right 😪 ?
+    
+    lets go through this code together.
+    
+    So all custom hooks are pretty much dependent on other hooks like useState , useEffect , useCallback, useMemo etc. for this component we will be using useState hook.
+    
+    Let's go ahead and create a functional component called `useFetchHook` it expects a `body` which is an optional parameter for data to be passed during each request.
+    
+    ```
+     const [data, setData] = useState<T | T[]>([]);
+     const [loading, setLoading] = useState<boolean>(false);
+     const [error, setError] = useState<boolean>(false);
+    ```
+    
+    Next, we will talk about this blocks of code above, it uses `useState` hook to give an initial value to our `data` which will be the response of our API call, `loading` tells us the status of the asynchronous function and `error` which we will set to true if an error occurred during the API request.
+    
+    ```
+     const fetchResourse = async (url: string, method: HTTPmethods) => {
+             if (url.length) {
+                 setLoading(true);
+                 try {
+                     let response;
+                     switch (method) {
+                         case "get":
+                             response = await fetch(url);
+                             break;
+                         default:
+                             response = await fetch(url, {
+                                 method: method,
+                                 body,
+                             });
+                             break;
+                     }
+                     console.log("response", body, method);
+                     let d: T | T[] = await response.json();
+                     setData(d);
+                 } catch (error) {
+                     console.log(error);
+                     setError(true);
+                 } finally {
+                     setLoading(false);
+                 }
+             }
+         };
+    ```
+    
+    The next chunk of code we will be looking at is the code in the `fetchResourse` function the function expects a `url` of type string and a `method` of type `HTTPmethods` as seen above. The function contains a try-catch block to check for errors and a switch case that helps us perform different types of requests. at the beginning of the try-catch block, we will set loading to be true to denote that the request has fired off, and in the finally block we would set loading to be false to denote that the request is done, and set data to be equal to the response of the API request.
+    
+    ```
+     return [data, loading, error, fetchResourse];
+    ```
+    
+    Lastly, we move to the most important part of the custom hook we add our expected output from the `customHook` which includes `data` `loading` `error` and `fetchResourse`.
+    
+    **Consuming our Fetch Hook**
+    
+    First, we will make a simple component where we would make a get request on rendering that pag to a [fake](https://jsonplaceholder.typicode.com/) JSON placeholder and a post component when we submit a form using the same customHook seems like magic right?... let me show you how.
+    
+    ```
+     import React, { useState, useEffect } from "react";
+     import { useFetchHook } from "../customHooks/useFetchHook";
+    
+     export const FetchComponent: React.FC = () => {
+         const [body, setBody] = useState({});
+         let [data, loading, error, fetchApi] = useFetchHook(body);
+    
+         useEffect(() => {
+             fetchApi("https://jsonplaceholder.typicode.com/todos/1", "get");
+         }, []);
+    
+         return (
+             <>
+                 <h1> My First Custom Fetch Hook </h1>
+                 {loading
+                     ? "loading...."
+                     : error
+                     ? "an error ocurred"
+                     : JSON.stringify(data).slice(0, 100)}
+    
+                 <form
+                     onSubmit={(e) => {
+                         fetchApi("https://jsonplaceholder.typicode.com/todos", "post");
+                     }}
+                 >
+                     <input
+                         placeholder="boody"
+                         onInput={(e) => setBody({data: e.target.value)}
+                     />
+                     <button className="button" type="submit">
+                         Fetch Resources
+                     </button>
+                 </form>
+             </>
+         );
+     };
+    ```
+    
+    The code above is simply a form that get details and post details its the output let get it into bits
+    
+    As you can see from above the first thing we do is import `React`, our custom Hook `useFetchHook` the `useEffect`, and the `useState` hook.
+    
+    then create a functional component,
+    
+    using the useState hook we create a body state, this will hold data of our form
+    
+    ```
+     export const FetchComponent: React.FC = () => {
+         const [body, setBody] = useState({data:""});
+     }
+    ```
+    
+    lets consume our custom hook now
+    
+    ```
+         let [data, loading, error, fetchApi] = useFetchHook(body);
+    
+         useEffect(() => {
+             fetchApi("https://jsonplaceholder.typicode.com/todos/1", "get");
+         }, []);
+    ```
+    
+    `data`, `loading` `error` and `fetchApi` correspond respectively to the result of the `usefetchHook`
+    
+    The `useEffect` hook is then executed with the url and the method this gives us the initial data that is to be rendered on the page.
+    
+    ```
+         return (
+             <>
+                 <h1> My First Custom Fetch Hook </h1>
+                 {loading
+                     ? "loading...."
+                     : error
+                     ? "an error ocurred"
+                     : JSON.stringify(data).slice(0, 100)}
+             </>
+         )
+    ```
+    
+    Next lets go over to our form and make a post request
+    
+    ```
+                 <form
+                     onSubmit={(e) => {
+                         e.preventDefault();
+                         fetchApi("https://jsonplaceholder.typicode.com/todos", "post");
+                     }}
+                 >
+                     <input
+                         placeholder="boody"
+                         onInput={(e: any) => setBody({ data: e.target.value })}
+                     />
+                     <button className="button" type="submit">
+                         Fetch Resources
+                     </button>
+                 </form>
+    ```
+    
+    on Form submission we want to make a post request as seen above
+    
+    All we have to do is set the body to contain the data in the form and make our post request on Input and call the `fetchApi` function provided by our custom hook with the `url` and the `http method`.
+    
+    N.B You should play around this hook to utilize more of its capabilities and try other http methods, look out for the infiinite loop
+    
+2.  ### **INPUT FIELD HOOK**
+    
+    this type of hook is used for validation of input fields and collecting values, it is used mostly for making similar input fields, it is way simpler than the Fetch Hook, let me show you how to do this.
+    
+    Let's create a file in the component folder called `useInput.tsx` lets get started
+    
+    ```
+     import React, { useState } from "react";
+    
+     export const UseInput = (
+         type: string, 
+         label: string, 
+         placeholder: string
+     ) => {
+         const [value, setValue] = useState<string>("");
+    
+         const InputHTML = () => {
+             return (
+                 <>
+                     <label> {label} </label>
+                     <br />
+                     <br />
+                     <input
+                         type={type}
+                         placeholder={placeholder}
+                         onInput={(e: any) => setValue(e.target.value)}
+                     />
+                 </>
+             );
+         };
+    
+         return [value, InputHTML()];
+     };
+    ```
+    
+    Pretty simple right ?
+    
+    lets walk through the code together.
+    
+    just like before we import `React` and `useState` hook here we are going to need attributes of an input field like `type`, `label`, and `placeholder`. the useInput function above will expect these values.
+    
+    Next, we would create a value state using the setState Hook, this provides us with a value and a setValue handler, then we call a function called InputHTML this will help us return the dom element, the state of the value is updated with an Input event on the form field.
+    
+    lastly lets consume this hook...
+    
+    we would do this by creating three fields a `username`, `email` and `password` field just with that single hook
+    
+    Create a file called `inputComponent.tsx` in the components directory, and add the following code.
+    
+    ```
+     import React, { ReactElement } from "react";
+     import { UseInput } from "../customHooks/useInputHook";
+    
+     export default function inputComponent(): ReactElement {
+         let [name, NameInput] = UseInput("text", "name", "John Doe");
+         let [email, EmailInput] = UseInput("email", "email", "Jonathan@gmail.com");
+         let [password, PasswordInput] = UseInput("password", "password", "test");
+    
+         return (
+             <div>
+                 <h1>CUSTOM INPUT HOOK</h1>
+                 <div>{NameInput}</div>
+                 <div>{EmailInput} </div>
+                 <div> {PasswordInput} </div>
+                 <button onClick={() => console.log({ name, email, password })}>
+                     Submit
+                 </button>
+             </div>
+         );
+     }
+    ```
+    
+    pretty straight forward right? import the inputcomponent into app.tsx and see the magic we created far less amount of code, add some values to the form and hit the submit button, then head to the console to see the values of your input field.
+    
+    in this component, we used the useInput hook to create three input elements, while having access to their values, from here all we need to do is render these input elements on the DOM.
+    
+3.  ### **DROP DOWN HOOK**
+    
+    the Dropdown hook is Just like the InputHook, very similar that you only have to change a few variables, let's see how this is done.
+    
+    let's create a file in the customHooks directory called dropDownHooks.tsx, done that? right let's write some code.
+    
+    ```
+     import React, { useState } from "react";
+    
+     export const useDropDown = (list: string[], label: string, name: string) => {
+         const [selected, setSelected] = useState("");
+         const dropDownHTML = () => (
+             <div>
+                 <label htmlFor={name}>{label}</label>
+                 <br />
+                 <select
+                     name={name}
+                     onChange={(e) => {
+                         setSelected(e.target.value);
+                     }}
+                     value={selected}
+                 >
+                     <option disabled={true} value="">
+                         Select Option
+                     </option>
+                     {list.map((e, i) => {
+                         return (
+                             <option key={e + i} value={e}>
+                                 {e}
+                             </option>
+                         );
+                     })}
+                 </select>
+             </div>
+         );
+    
+         return [selected, dropDownHTML()];
+     };
+    ```
+    
+    Just like with other hooks here i will also import my custom hook and of course React, my dropdown component is supposed to have multiple options this will be received as a list of `strings`, next we create a function called useDropDown this will take in three arguments `list`, `label`, and `name` this correspond the attributes for the select field
+    
+    ```
+     const [selected, setSelected] = useState("");
+    ```
+    
+    First, we would set the state for the selected value, `selected` will hold the value of the dropdown while `setSelected` will be used to set the value.
+    
+    let go ahead to build the HTML section of the dropdown hook
+    
+    the dropdown hook returns a select field with a corresponding label and also loops through the list passed to the custom hook.
+    
+    lastly we implement the onChange handler to set the new state of the value.
+    
+    ```
+     const dropDownHTML = () => (
+             <div>
+                 <label htmlFor={name}>{label}</label>
+                 <br />
+                 <select
+                     name={name}
+                     onChange={(e) => {
+                         setSelected(e.target.value);
+                     }}
+                     value={selected}
+                 >
+                     <option disabled={true} value="">
+                         Select Option
+                     </option>
+                     {list.map((e, i) => {
+                         return (
+                             <option key={e + i} value={e}>
+                                 {e}
+                             </option>
+                         );
+                     })}
+                 </select>
+             </div>
+         );
+    ```
+    
+    **USING OUR DROPDOWN HOOK**
+    
+    To use our dropdown hook all we need is to pass the `list` which is an array of what we want for our options of the dropdown, a `label`, and the `name` of the field.
+    
+    ```
+     import React, { ReactElement } from "react";
+     import { useDropDown } from "../customHooks/dropdownHook";
+    
+     export default function dropdownComponent(): ReactElement {
+         // eslint-disable-next-line react-hooks/rules-of-hooks
+         const [value, DropDownElement] = useDropDown(
+             ["dog", "cat", "fish"],
+             "animals",
+             "animal"
+         );
+    
+         return (
+             <div>
+                 <h1> DROP DOWN HOOK </h1>
+                     {DropDownElement}
+                 <p> selected value = {value} </p>
+             </div>
+         );
+     }
+    ```
+    
+    import the useDropdown custom hook and pass the required values, we should be expecting an array containing the containing the state of the drop-down and the dropdown Element to be mounted on the DOM.
+    
+    ```
+    
+         const [value, DropDownElement] = useDropDown(
+             ["dog", "cat", "fish"],
+             "animals",
+             "animal"
+         );
+    
+         return (
+             <div>
+                 <h1> DROP DOWN HOOK </h1>
+                     <DropDownElement />
+                 <p> selected value = {value} </p>
+             </div>
+         );
+    ```
+    
+    import out component in App.tsx
+    
+4.  ### **AUTH HOOK**
+    
+    We are going to use this hook to render a component if a user is authenticated or not its a pretty straight forward hook there are times we would love to render a different component depending on a users status if the user is authenticated or not or sometimes redirect the users to the
+    
+    ```
+     import React, { useState, useEffect } from "react";
+    
+     const Loading = () => <h2>Loading....</h2>;
+    
+     const notAuthenticated = () => <h2>notAuthenticated....</h2>;
+    
+     const decoded = (token: string) => {
+         const x = Math.random();
+         if (x > 0.5) return { expired: false };
+         else return { expired: true };
+     };
+    
+     export const authHook = (component: React.FC) => {
+         // eslint-disable-next-line react-hooks/rules-of-hooks
+         const [compoenent, setComponent] = useState<React.FC>(Loading);
+    
+         const isAuthenticated = () => {
+             const token: string | null = localStorage.getItem("auth-token");
+             console.log("ff");
+             if (token) {
+                 if (decoded(token as string).expired) {
+                     setComponent(notAuthenticated);
+                 } else {
+                     setComponent(component);
+                 }
+             } else setComponent(notAuthenticated);
+         };
+    
+         useEffect(() => {
+             isAuthenticated();
+         }, []);
+    
+         return [compoenent];
+     };
+    ```
+    
+    This will be a purely self-descriptive solution the idea here is to choose between two-component to render are we going to render the component passed to us or are we going to render another component depending on the authentication status of the user.
+    
+    For this example, we will be using the local storage to check for the JWT and create a mock function that checks if the token is expired or not and then returns a component showing base on that result.
+    
+    Lets go through the code
+    
+    ```
+     const Loading = () => <h2>Loading....</h2>;
+    
+     const notAuthenticated = () => <h2>notAuthenticated....</h2>;
+    
+     const decoded = (token: string) => {
+         const x = Math.random();
+         if (x > 0.5) return { expired: false };
+         else return { expired: true };
+     };
+    ```
+    
+    The variable Loading returns a `h2` tag with loading text, it signifies that the page is loading, the loader this is useful in cases where an asynchronous function is used to determine if the user is authenticated.
+    
+    The notAuthenticated function returns a not Authenticated text, this component shows when the user does not meet the requirement.
+    
+    decode function just takes in a token (gotten from the local storage) and what we do is just generate a random number if the number is above 5 then we return and object with expired false else we return an object with expired true.
+    
+    ```
+     export const authHook = (component: React.FC) => {
+         const [currentComponent, setComponent] = useState<React.FC>(Loading);
+    
+         const isAuthenticated = () => {
+             const token: string | null = localStorage.getItem("auth-token");
+             console.log("ff");
+             if (token) {
+                 if (decoded(token as string).expired) {
+                     setComponent(notAuthenticated);
+                 } else {
+                     setComponent(component);
+                 }
+             } else setComponent(notAuthenticated);
+         };
+    
+         useEffect(() => {
+             isAuthenticated();
+         }, []);
+    
+         return [currentComponent];
+     };
+    ```
+    
+    The authHook function expects a component that will be rendered if all things go well and if not returns the unauthenticated component above.
+    
+    The useState hook is used to set the current component depending on the outcome of the authentication, we also need to use the useEffect hook so we can execute the isAuthenticated function when the page is mounted.
+    
+    The hook returns the component which is set depending on the decoded function.
+    
+    ```
+     import React from "react";
+     import { authHook } from "../customHooks/authHook";
+    
+     export default function componentName() {
+         const Profile = () => (
+             <div>
+                 <h1>Jonathan</h1>
+                 <p> Software Engineer</p>
+             </div>
+         );
+    
+         const [UserProfile] = authHook(Profile);
+         console.log(UserProfile);
+    
+         return <>{UserProfile}</>;
+     }
+    ```
+    
+    Just as always we will import our authHook and pass the component we will render to the authHook as shown above.
+    
+    Creating custom hooks is fun and great because they can be reusable and save us a lot of stress when coding, but we must watch out for bottlenecks and unnecessary re-renders or infinite loop.

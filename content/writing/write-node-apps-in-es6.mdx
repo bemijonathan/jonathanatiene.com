@@ -1,0 +1,188 @@
+---
+title: Write node apps in ES6
+description: This will be achieved by compiling ES6 javascript code to ES5 this can be possible using a tool calle...
+topics: ["Career / Engineering"]
+date: 2020-04-29
+updated: 2020-06-19
+slug: write-node-apps-in-es6
+archived: true
+originalUrl: "https://dev.to/mixed_code/set-up-node-project-in-es6-2bla"
+---
+This will be achieved by compiling ES6 javascript code to ES5 this can be possible using a tool called [babel](https://babeljs.io/). 
+Babel is a JavaScript compiler. 
+
+Let's get started 
+Ensure you have node js installed in your machine, check with the following command 
+
+```bash
+~$ node -v 
+#13.11.0
+```
+
+The next step is creating a Project called nodeapp, lets head on to our terminal and do the following.
+
+```bash
+~$ mkdir nodeapp && cd nodeapp && npm init -y
+```
+
+the "mkdir" command creates a nodeapp folder, the "cd" command takes us into the folder and "npm init -y"  this quickly creates a package.json file.
+
+Next we will have to set up our babel compiler, we can install Babel CLI locally by running:
+
+```bash
+~$ npm install --save-dev @babel/core @babel/cli
+```
+
+We now have babel compiler all sot up, we also need to specify what folder babel should compile from and where it outputs the compiled code
+
+we simply add a command called "npm run build" to our package.json file
+
+```json
+#package.json
+"scripts":{
++ "build": "babel src -d dist"
+}
+```
+
+The build command technically compiles all the code in the src folder and outputs to a dist folder.
+
+Great let's test this out by creating the src folder and some files to check this out.
+
+```bash
+mkdir src && touch src/index.js
+```
+
+Now we finished configuring babel we have to tell babel what to do, we have to tell babel that we want to compile to ES5 to do this we will create a [.babelrc](https://babeljs.io/docs/usage/babelrc) config file in the root and add some babel [plugins](https://babeljs.io/docs/plugins). 
+
+For now you can use the [env preset](https://babeljs.io/docs/plugins/preset-env), which enables transforms for ES5+  ([morepluggins](https://babeljs.io/docs/en/plugins))
+
+```bash
+~$ touch .babelrc 
+```
+
+In .babelrc  add the following code
+
+```json
+{
+  "presets": ["@babel/preset-env"]
+}
+```
+
+next we install our plugin via npm 
+
+```bash
+~$ npm install @babel/preset-env --save-dev
+```
+
+let's write some ES6 code in src/index.js  and see the magic
+
+```jsx
+//src/index.js
+Let foo = "bar"
+```
+
+in our terminal we type
+
+```bash
+$ npm run build
+
+#> nodeapp@1.0.0 build /home/mixed_code/dev/nodeapp
+#> babel src -d dist
+
+#Successfully compiled 1 file with Babel.
+```
+
+boom we have  a dist folder where our compiled code lies
+
+```jsx
+//dist/index.js
+"use strict";
+
+var foo = "bar";
+```
+
+To wrap things off you can watch for file changes using [nodemon](https://www.npmjs.com/package/nodemon) to continuously execute the "npm run build" command and [rimfaff](https://www.npmjs.com/package/rimraf) to remove the previous built file.
+
+```bash
+~$ npm i -d nodemon rimraff
+```
+
+Up next let's set up our scripts
+
+```bash
+//package.json
+
+"scripts": {
+    "build": "babel src -d dist/index.js"
++   "start": "npm run build && node dist",
++   "restart": "rimraf dist && npm run start",
++   "dev": "nodemon --exec npm run restart"
+}
+```
+
+The scripts above simply uses rimraff to remove the dist folder of the previous build and executes the "npm run start" command, the start script executes the "npm run build" command and runs the output using "node dist/index.js".
+
+📝 for this to execute continuously each time we save have to tell nodemon to execute the restart command on each save, that is the function of the dev script above.
+
+⚠️ we have to create a config file for nodemon telling nodemon the folder it has to watch so we don't end up in an infinite loop.
+
+create a nodemon.json file and add the following lines of code
+
+```bash
+~$ touch nodemon.json
+```
+
+```json
+{
+    "watch": ["src"]    
+}
+```
+
+nice our work environment is all set up let's build a simple express server, hop into the terminal
+
+```bash
+~$ npm i -s express 
+```
+
+paste the following code in src/index.js
+
+```jsx
+//index.js
+import express from "express"
+
+const app = express()
+
+app.listen(8000, () => {
+	console.log("server started at http://localhost:8000")
+})
+```
+
+in our terminal we simply type 
+
+```bash
+~$ npm run dev
+
+#> nodeapp@1.0.0 dev /home/mixed_code/dev/nodeapp
+#> nodemon --exec npm run restart
+
+#[nodemon] 2.0.2
+#[nodemon] to restart at any time, enter `rs`
+#[nodemon] watching dir(s): src/**/*
+#[nodemon] watching extensions: js,mjs,json
+#[nodemon] starting `npm run restart`
+
+#> nodeapp@1.0.0 restart /home/mixed_code/dev/nodeapp
+#> rimraf dist && npm run start
+
+#> nodeapp@1.0.0 start /home/mixed_code/dev/nodeapp
+#> npm run build && node dist/index.js
+
+#> nodeapp@1.0.0 build /home/mixed_code/dev/
+#> babel src -d dist
+
+#Successfully compiled 1 file with Babel.
+
+#server started at http://localhost:8000ce
+```
+
+You can add extra plugins from [babel](https://babeljs.io/) to enable you to enjoy more features.

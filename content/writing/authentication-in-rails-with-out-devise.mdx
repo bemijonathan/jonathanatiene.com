@@ -1,0 +1,306 @@
+---
+title: AUTHENTICATION IN RAILS WITH OUT DEVISE
+description: "Devise is one of the most downloaded library in Ruby on Rails Development for authentication it quick fast and good to go… But how to you…"
+topics: ["Career / Engineering"]
+date: 2020-01-14
+slug: authentication-in-rails-with-out-devise
+archived: true
+originalUrl: "https://medium.com/@bemijonathan/d4d7ff994c54"
+---
+![](https://cdn-images-1.medium.com/max/800/1*dvX5VDRMPbFTYvN2DU3vPQ.png)
+
+devise stats from ruby gems
+
+Devise is one of the most downloaded library in Ruby on Rails Development for authentication it quick fast and good to go… But how to you build an authentication system in Ruby on Rails with out devise today am going to show you sit tight and enjoy.
+
+![](https://cdn-images-1.medium.com/max/800/1*ajKkpGPh4l0hDqwd2gg7Qw.gif)
+
+Lets get started
+
+First we build a new project : using the command rails new auth-app
+
+then go into the directory type cd auth-app in the commad line..
+
+Then we start our server with: rails s
+
+![](https://cdn-images-1.medium.com/max/800/1*HaSOTvKU7yZuNEgrT8-sTA.png)
+
+On our browser we can type [http://localhost:3000/](http://localhost:3000/) and see the default rails home page, next we are going to scaffold a simple contact list where contacts are added in a company’s list of contacts
+
+so we run = rails g scaffold contact name:string address:text email:string
+
+this commands builds a simple rails template
+
+again we migrate our database by running rails db:migrate on the command line
+
+![](https://cdn-images-1.medium.com/max/800/1*rbQwI-2MJroRaxcnBYRcNw.png)
+
+rails migration
+
+opening the project on the editor you have your views file generated and the controller,
+
+Next we generate a model for users.. and everyone that must view our contacts must be logged in.
+
+![](https://cdn-images-1.medium.com/max/800/1*evYnKjopsmd7Dl1BkRlP_g.png)
+
+So we will create a sign up route as shown in auth-app/config/routes.rb and add our login and log out functions
+
+![](https://cdn-images-1.medium.com/max/800/1*l6C-y4koomV8xvAuRCKTLw.png)
+
+then we generate out user controller
+
+type rails g controller user in the command line and create the login\_form.html.erb page and the sign-up.html.erb page in
+
+```
+/auth-app/app/views/user
+```
+
+in the login\_form page we add a rails form helper and our password and email fields thats all save check your browser localhost:3000/login and your contact form is ready.
+
+```
+<h1> LOGIN FORM </h1>
+```
+
+```
+<%= form_tag("/login") do %>
+```
+
+```
+<p>Name</p>
+```
+
+```
+<input name="name">
+```
+
+```
+<p>Password</p>
+```
+
+```
+<input type="password" name="password">
+```
+
+```
+<input type="submit" value="Log in">
+```
+
+```
+<% end %>
+```
+
+and for the sign-up.html.erb
+
+```
+<h1>  SIGN up </h1>
+```
+
+```
+<%= form_tag("/sign-up") do %>
+```
+
+```
+<p>Name</p>
+```
+
+```
+<input name="name">
+```
+
+```
+<p>Password</p>
+```
+
+```
+<input type="password" name="password">
+```
+
+```
+<input type="submit" value="Log in">
+```
+
+```
+<% end %>
+```
+
+next we will enable our flash notice in the application layouts folder by adding this snippet
+
+```
+<% if flash[:notice] %><div><%= flash[:notice] %></div><% end %>
+```
+
+great now we can create our methods for both login and sign-up
+
+for the sign-up route we create our controller
+
+**the create method:** Here we create a new user with the rails params helpers and set the name and the password and we save the new user id to the sessions hash ( you can read more about session in ruby on rails [here](https://www.justinweiss.com/articles/how-rails-sessions-work/) ) and then send a flash notice saying “you signed up successfully” and we redirect you to the contacts page if all goes well else we re-render the sign-up page.
+
+**N/B:** 🙏 never store passwords as plain texts
+
+```
+def create
+```
+
+```
+@user = User.new(
+```
+
+```
+name: params[:name],
+```
+
+```
+password: params[:password]
+```
+
+```
+)
+```
+
+```
+if @user.save
+```
+
+```
+session[:user_id] = @user.id
+```
+
+```
+flash[:notice] = "You have signed up successfully"
+```
+
+```
+redirect_to("/contacts")
+```
+
+```
+else
+```
+
+```
+render("sign-up")
+```
+
+```
+end
+```
+
+```
+end
+```
+
+the Login Method
+
+```
+def login
+```
+
+```
+@user = User.find_by(name: params[:name])
+```
+
+```
+puts @user
+```
+
+```
+if @user[:password] == params[:password]
+```
+
+```
+session[:user_id] = @user.id
+```
+
+```
+flash[:notice] = "You have logged in successfully"
+```
+
+```
+redirect_to("/contacts")
+```
+
+```
+else
+```
+
+```
+flash[:notice] = "login failed"
+```
+
+```
+render("login_form")
+```
+
+```
+end
+```
+
+```
+end
+```
+
+the Log Out Method: here we set the user\_id value to nill
+
+```
+def logout
+```
+
+```
+session[:user_id] = nil
+```
+
+```
+flash[:notice] = "You have logged out successfully"
+```
+
+```
+redirect_to("/login")
+```
+
+```
+end
+```
+
+pheww thats a lot of work… well lets protect out contacts from visitors
+
+All we have to do here is to check if the user is authenticated before any action can be done in the contacts controller
+
+in the auth-app/app/controllers/application\_controller.rb we define our authenticate\_user method that does a simple redirect if there is no user associted with the session
+
+```
+def authenticate_user
+```
+
+```
+@current_user = User.find_by(id: session[:user_id])
+```
+
+```
+if @current_user == nil
+```
+
+```
+flash[:notice] = "You must be logged in"
+```
+
+```
+redirect_to("/login")
+```
+
+```
+end
+```
+
+```
+end
+```
+
+back in the contacts controller we simply write a before\_action helper just below the class inheritance
+
+```
+before_action :authenticate_user
+```
+
+this makes sure that our user must be logged in before they can add, remove or update our contacts….
+
+Let Me know if this article was helpful

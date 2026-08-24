@@ -1,0 +1,188 @@
+---
+title: "Exploring the Foundations of AI: A Deep Dive into Frank Rosenblatt's Perceptron Model"
+description: "Introduction Frank Rosenblatt, an American psychologist, is known for his leading work on the perceptron an early model of artificial neural networks. He aimed to emulate information storage, retrieva"
+topics: ["Research"]
+date: 2024-07-29
+slug: exploring-the-foundations-of-ai-a-deep-dive-into-frank-rosenblatts-perceptron-model
+originalUrl: "https://jonathanatiene.tech/exploring-the-foundations-of-ai-a-deep-dive-into-frank-rosenblatts-perceptron-model"
+---
+## **Introduction**
+
+Frank Rosenblatt, an American psychologist, is known for his leading work on the perceptron an early model of artificial neural networks. He aimed to emulate information storage, retrieval, and cognitive behaviour observed in biological organisms, proving that computers could learn if designed with appropriate parameters. Rosenblatt's experiments and theoretical work aimed to answer important questions about how information is stored and remembered, and how this stored information is used for recognition and classification.
+
+His research explored two main questions:
+
+1.  In what form is information stored or remembered?
+    
+2.  How does information in memory influence recognition and behaviour?
+    
+
+Rosenblatt introduced the perceptron as a model to answer these questions, proposing that new neural pathways facilitate retention and response to stimuli when information is stored in a coded form within a neural network. His work laid the foundation for understanding how machines could mimic certain cognitive functions of biological nervous systems.
+
+### The Perceptron Theory According to Frank Rosenblatt
+
+1.  **Random Initial Connections**: Neural connections at birth are random, and influenced by minimal genetic constraints.
+    
+2.  **Neural Plasticity**: Neural networks change over time with activity, altering response probabilities.
+    
+3.  **Formation of Pathways**: Similar stimuli form pathways to the same neurons, while dissimilar ones form different connections.
+    
+4.  **Role of Reinforcement**: Positive/negative reinforcement influences the formation of neural connections.
+    
+5.  **Representation of Similarity**: Similar stimuli activate the same sets of neurons, defining similarity within the system.
+    
+
+### The Structure of a Franks Perceptron
+
+![](https://cdn.hashnode.com/res/hashnode/image/upload/v1721013433339/685f3592-6774-44f5-a272-2eb193bc74c3.jpeg)
+
+-   **Sensory Units** :
+    
+    These are the input units that receive external stimuli. Each sensory unit corresponds to a specific input signal.
+    
+-   **Association Units (A-Units)**:
+    
+    These units are connected to sensory units via modifiable topographic connections. Association units receive inputs from sensory units and process these inputs.
+    
+-   **Response Units (R-Units)**:
+    
+    These are the output units that produce the final response of the perceptron. They receive signals from association units and determine the overall output based on the combined inputs.
+    
+-   **Modifiable Connections:**
+    
+    The connections between sensory units and association units have weights that can be adjusted through learning. These weights influence how signals are transmitted through the network. These are connections between A units - Sunits - R units.
+    
+-   **Threshold Logic Units:**
+    
+    Each unit has a threshold value. The unit produces an output only if the total input exceeds this threshold. This rule holds for both inhibitory neurons and excitatory neurons.
+    
+-   **Learning Mechanism:**
+    
+    The perceptron adjusts its modifiable connections based on the error between the actual output and the desired output. This learning mechanism helps the perceptron improve its performance over time. Here the rule is simple increase the weight if the output was too low, and decrease it if the output was too high.
+    
+
+### Rosenblatt Experiments
+
+**Rosenblatt's perceptron learning theory** can be divided into two distinct phases in the learning process:
+
+1.  **Predominant Phase:** here the perceptron is highly influenced by recent stimuli, and the weights are rapidly adjusted to accommodate new inputs it is then characterized by high plasticity, he confirmed this with an experiment that demonstrated the transition from the predominant to the post-dominant phase as the perceptron learns from initial stimuli.
+    
+2.  **Postdominant Phase:** The influence of recent stimuli decreases, and weights stabilize, reflecting cumulative learning. Represents a mature state of learning with stable response patterns. He confirmed this by confirming the stability of the AI to generalize In the presence of similar stimuli
+    
+
+### Mathematical Analysis of Learning in the Perceptron According to Rosenblatt
+
+The mathematical equation is expressed like this
+
+-   **Initialize Weights**: Starting with random weights, the perceptron learns by adjusting these weights based on the error between the actual and desired output. The weight adjustment rule is mathematically defined as:
+    
+    $$w\_i (t+1) = w\_i (t) + Δw\_i ​$$
+    
+
+where
+
+$$w\_i(t) \\text\{ is the weight associated with the \} i\\text\{-th input at time \} t.$$
+
+$$\\Delta w\_i \\text\{ is the change in the weight, determined by the learning rule.\}$$
+
+**For Each Training Example**:
+
+Rosenblatt's mathematical theory incorporates these experimental findings into a formal framework. The key components include:
+
+1.  Weight Adjustment Formula: The perceptron learns by adjusting the weights based on the error between the actual output and the desired output
+
+$$\\Delta w\_i = \\eta \\cdot (d - y) \\cdot x\_i$$
+
+2.  Threshold Logic: The perceptron calculates a weighted sum of the inputs and then The perceptron then applies an activation function
+
+$$y = \\begin\{cases\} 1 & \\text\{if \} \\sum\_\{i=1\}^n w\_i x\_i \\geq \\theta \\\\ 0 & \\text\{if \} \\sum\_\{i=1\}^n w\_i x\_i \< \\theta \\end\{cases\}$$
+
+3.  **Error Calculation:** This error is used to adjust the weights according to the learning rule.
+
+$$e = d - y$$
+
+### Code
+
+```
+#1. Initialize Weights (randomly or with a specific strategy)
+#2. Set learning rate (eta) 
+#3. Specify training data (inputs and desired outputs)
+#4. Set stopping criteria (e.g., maximum iterations, error )
+#5. For each training iteration:
+#    a. For each training example:
+#        i. Calculate weighted sum
+#        ii. Apply threshold activation function to get output
+#        iii. Calculate error
+#        iv. Update weights using the learning rule
+#    b. Check stopping criteria
+
+import numpy as np
+
+# Initialize weights and bias
+weights = np.zeros(2)  # Since there are 2 features in X
+bias = 1
+
+# Training data for AND logic gate
+X = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
+y = np.array([0, 0, 0, 1])
+
+learning_rate = 0.2                                                                  
+max_iteration = 5
+
+import numpy as np
+
+# Initialize weights and bias
+weights = np.zeros(2)  # Since there are 2 features in X
+bias = 1
+
+# Training data for AND logic gate
+X = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
+y = np.array([0, 0, 0, 1])
+
+learning_rate = 0.2
+max_iteration = 5
+
+# Training loop
+for epoch in range(max_iteration):
+    for i in range(len(X)):
+        # Calculate weighted sum
+        weighted_sum = np.dot(weights, X[i]) + bias
+        # Activation function
+        prediction = 1 if weighted_sum > 0 else 0
+        # Calculate error
+        error = y[i] - prediction
+        # Update weights and bias
+        weights += learning_rate * error * X[i]
+        bias += learning_rate * error
+
+# Testing the perceptron [[0, 0]]
+a = np.array([[0, 0]])
+for x in a:
+    weighted_sum = np.dot(weights, x) + bias
+    prediction = 1 if weighted_sum > 0 else 0
+    print(f"Input: {x}, Prediction: {prediction}")
+
+# Print final weights and bias
+print(f"Weights: {weights}")
+print(f"Bias: {bias}")
+```
+
+### Conclusions and Evaluation
+
+Rosenblatt's work on the perceptron provided foundational insights into neural networks and machine learning he provided both empirical and theoretical proofs that a perceptron can learn from experience by adjusting its weights to minimize classification errors in a bivalent system.
+
+Rosenblatt concluded that "The perceptron model, even with a single logical level of A-units and response units, can be shown to have some interesting properties in the field of selective recall and selective attention. By combining audio and photo inputs, it is possible to associate sounds, or auditory "names" to visual objects, and to get the perceptron to perform such selective responses as are designated by the command "Name the object on the left," or "Name the colour of this stimulus." The question may well be raised at this point of where the perceptron's capabilities stop.
+
+We have seen that the system appears to be capable of temporal pattern recognition, as well as spatial recognition, involving any sensory modality or combination of modalities. It can be shown that with proper reinforcement it will be capable of trial-and-error learning, and can learn to emit ordered sequences of responses, provided its own responses are fed back through sensory channels."
+
+The perceptron model laid the groundwork for advanced neural networks, leading to the creation of multi-layer perceptrons and the backpropagation algorithm.
+
+### References
+
+Wikipedia. (2024). _Perceptron_. \[online\] Available at: [https://en.wikipedia.org/wiki/Perceptron#:~:text=Rosenblatt%20described%20the%20details%20of](https://en.wikipedia.org/wiki/Perceptron#:~:text=Rosenblatt%20described%20the%20details%20of) \[Accessed 15 Jul. 2024\].
+
+Rosenblatt, F. (1958). The perceptron: A probabilistic model for information storage and organization in the brain. _Psychological Review, 65_(6), 386–408. [https://doi.org/10.1037/h0042519](https://doi.org/10.1037/h0042519)
+
+[Lefkowitz, M. (2019). _Professo_](https://psycnet.apa.org/doi/10.1037/h0042519)_r’s perceptron paved the way for AI – 60 years too soon_. \[online\] Cornell Chronicle. Available at: [https://news.cornell.edu/stories/2019/09/professors-perceptron-paved-way-ai-60-years-too-soon](https://news.cornell.edu/stories/2019/09/professors-perceptron-paved-way-ai-60-years-too-soon).
+
+‌

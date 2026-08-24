@@ -1,0 +1,49 @@
+---
+title: Enhancing a coderabbit reviews with file path prompts
+description: "files: */.jsx (meaning, all jsx file in this project)"
+date: 2023-09-18
+updated: 2023-09-19
+slug: enhancing-a-coderabbit-reviews-with-file-path-prompts
+topics: [notes]
+originalUrl: "https://gist.github.com/bemijonathan/e10cae6d0a2a82d866e0cfccbbc35b8d"
+---
+## Introduction
+This documentation describes how to add specific code review instructions to match specific glob files path in your project, 
+This feature allows developers to set custom instructions for code review based on file paths, 
+thus enhancing the effectiveness of the code reviews from coderabbit.
+
+## Overview
+Adding file path prompts allows developers to specify custom instructions for different parts of the codebase. 
+For example, you may want to enforce the use of standard JS format for reviewing TypeScript files in a specific directory: 
+or the Google Style Guide for your tsx files in another directory, specifying these instructions ultimately increase the accuracy the reviews 
+
+## Sample usage
+
+`files`: **/*.jsx  (meaning, all jsx file in this project)
+
+`instructions`: ensure that every code strictly adheres to the google style guide, point out any unnecessary DOM manipulations.
+
+---
+
+`files`: **/*.css, **/css/*.sass   (meaning, all css and sass files in this project )
+
+`instructions`: The BEM approach is the standard for css files, ensure that we do not unreasonably repeat any styles.
+
+---
+
+`files`: **/api/* (meaning, all the files in the api directory )
+
+`instructions`: ensure that the microsoft style guide for typescript is following, suggest decorators and point out unkhnaddled errors
+
+---
+ 
+## Best Practices
+When adding file path prompts
+
+Use clear and effective instructions: Make sure your instructions are clear and understandable not only by the coderabbit but also by other developers.
+
+Regularly test the output and behaviour of the bot to ensure that it is accurate and providing helpful explanations / reviews
+
+Use correct glob patterns / file path: ensure that you use the correct file path to ensure the appropriate review.
+
+Keep your instructions up to date

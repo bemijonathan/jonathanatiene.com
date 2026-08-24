@@ -67,3 +67,7 @@ export function breadcrumbJsonLd(
     })),
   };
 }
+
+export function jsonLdString(data: unknown): string {
+  return JSON.stringify(data).replace(/</g, "\\u003c");
+}

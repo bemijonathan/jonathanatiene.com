@@ -1,0 +1,226 @@
+---
+title: Setup for Vue and Buefy in Rails 6
+description: "Be be sure you have node js, ruby and Ruby on Rails installed in your device rails -v #6.0.1 node -v #10.0.0 ruby -v #2.6.6 then we create a new app using rails webpack vue template rails new app"
+topics: ["Career / Engineering"]
+date: 2020-03-31
+slug: setup-for-vue-and-buefy-in-rails-6
+archived: true
+originalUrl: "https://jonathanatiene.tech/setup-for-vue-and-buefy-in-rails-6"
+alsoPublishedAt: ["https://dev.to/mixed_code/setup-for-vue-and-buefy-in-rails-6-3cng"]
+---
+Be be sure you have node js, ruby and Ruby on Rails installed in your device
+
+```
+rails -v #6.0.1
+
+node -v #10.0.0
+
+ruby -v #2.6.6
+```
+
+then we create a new app using rails webpack vue template
+
+```
+rails new app --webpack=vue --database=postgresql
+```
+
+the command above generates a new rails project with a default vuejs framework and postgres as its database
+
+```
+success Saved 12 new dependencies.
+info Direct dependencies
+├─ vue-loader@15.9.1
+├─ vue-template-compiler@2.6.11
+└─ vue@2.6.11
+info All dependencies
+├─ @vue/component-compiler-utils@3.1.1
+├─ consolidate@0.15.1
+├─ de-indent@1.0.2
+├─ he@1.2.0
+├─ merge-source-map@1.1.0
+├─ prettier@1.19.1
+├─ vue-hot-reload-api@2.3.4
+├─ vue-loader@15.9.1
+├─ vue-style-loader@4.1.2
+├─ vue-template-compiler@2.6.11
+├─ vue-template-es2015-compiler@1.9.1
+└─ vue@2.6.11
+ Done in 15.62s.
+ Webpacker now supports Vue.js 🎉
+```
+
+here we finished creating our rails project we can now move into the folder and start the rails server
+
+```
+cd app 
+rails db:create # this creates a postgresql database
+rails s
+
+=> Booting Puma
+=> Rails 6.0.2.2 application starting in development 
+=> Run `rails server --help` for more startup options
+    Puma starting in single mode...
+    * Version 4.3.3 (ruby 2.5.1-p57), codename: Mysterious Traveller
+    * Min threads: 5, max threads: 5
+    * Environment: development
+    * Listening on tcp://127.0.0.1:3000
+    * Listening on tcp://[::1]:3000
+ Use Ctrl-C to stop
+```
+
+so this shows our rails app when go to [localhost:3000](http://localhost:3000)
+
+Next we have to install the plugins that we need to build our app
+
+```
+yarn add buefy 
+yarn add vue-turbolinks
+```
+
+buefy is our css framework made from bulma you can find more [here](https://buefy.org)
+
+vue-turbolinks is a package to allow you to easily add Vue.js components to your Turbolinks powered apps.
+
+Replace the content of the hello\_vue.js with the following
+
+```
+// app > javascript > packs > hello_vue.js
+
+import TurbolinksAdapter from 'vue-turbolinks'
+import Vue from 'vue/dist/vue.esm'
+import App from '../app.vue'
+import Buefy from 'buefy'
+import 'buefy/dist/buefy.css'
+
+Vue.use(Buefy)
+Vue.use(TurbolinksAdapter)
+
+document.addEventListener('turbolinks:load', () => {
+   const app = new Vue({
+      el: '#hello',
+        data: () => {
+          return {
+            message: "Can you say hello?"
+          }
+        },
+       components: { App }
+      })
+    })
+```
+
+from the snippet above we imported the vuejs library, buefy , an App Component and the TurbolinksAdapter we register the plugins with vue with `Vue.use` Lastly we created a new vue app by instantiating vue on the webpage after its content Loaded
+
+in app/views/layouts/application.html.erb
+
+```
+<!--app/views/layouts/application.html.erb -->
+<%= stylesheet_pack_tag 'hello_vue' %>
+<!-- the lines above imports the hello_vue css file and mounts it here..-->
+<%= javascript_pack_tag 'hello_vue' %>
+<!-- the lines above imports the hello_vue js file and mounts it here..-->
+
+ <body>
+     <div id="hello">
+       <%= yield %>
+     </div>
+ </body>
+```
+
+here we put the yeild keyword inside the div with an `id="hello"` this helps vue select this element and possible mounts vue on the entire rails app
+
+Next lets create buttons on the home page simple button
+
+Jumping of to our terminal we generate a new controller called the index controller
+
+```
+rails g controller button index
+```
+
+and in our routes file we set the index page
+
+```
+#config/routes.rb
+
+Rails.application.routes.draw do
+      get '/' => "button#index"
+end
+```
+
+so lets create a button.vue component
+
+create a new file called button.vue in `app/javascript/`
+
+```
+//button.vue
+
+<template> 
+ <div>
+   <b-button type="is-primary"> Click Me </b-button>
+ </div>
+</template>
+
+<script>
+
+<script>
+```
+
+Next we have to let vue know that our component exist so we import it into hello\_vue.js
+
+\import your new components and register it with the components object in hello\_vue.js
+
+```
+//hello_vue.js
+import ButtonComponent from '../button.vue'
+
+components:{App , ButtonComponent}
+```
+
+Next step is mounting the Button component on the Vue app
+
+simply put
+
+```
+//app / views/ Button  /index
+
+<ButtonComponent></ButtonComponent>
+```
+
+great your app should show our beautiful button there
+
+Next lets return an array of styles for multiple colors of our buttons
+
+```
+# app/controllers/in button_controller.rb
+
+def index
+    @colors = ["primary", "dark", "light", "white"]
+end
+```
+
+to recieve this information in our vue app we simply convert it to json and pass it through as props
+
+```
+# app / views/ Button / index
+
+<ButtonComponent :colors="<%= #{@colors.to_json} %>" > <ButtonComponent/>
+
+<template> 
+   <div>
+        <b-button  
+            :type="`is-${color}`" 
+            v-for="(color , i ) in colors" 
+            :key="i" 
+        > 
+            {{color}}
+        </b-button>
+    </div>
+</template>
+
+<script>
+    export default{
+        props:[colors]
+    }
+<script>
+```
+
+Here that's all You need to get your app working

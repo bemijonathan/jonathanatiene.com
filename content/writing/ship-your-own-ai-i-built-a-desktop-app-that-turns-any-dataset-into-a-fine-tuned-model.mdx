@@ -1,0 +1,186 @@
+---
+title: "Ship Your Own AI: I Built a Desktop App That Turns Any Dataset into a Fine-Tuned Model"
+description: "I wanted one thing: take a dataset, pick a model, click train, and get a fine-tuned LLM — all on my MacBook Pro. No cloud bills. No Jupyter…"
+topics: ["AI Engineering"]
+date: 2026-03-27
+slug: ship-your-own-ai-i-built-a-desktop-app-that-turns-any-dataset-into-a-fine-tuned-model
+originalUrl: "https://medium.com/@bemijonathan/4af9c3b00568"
+---
+![](https://cdn-images-1.medium.com/max/800/1*XYQwVZvKz8cJjqbRw59qAQ.png)
+
+I wanted one thing: take a dataset, pick a model, click train, and get a fine-tuned LLM — all on my MacBook Pro. No cloud bills. No Jupyter notebooks. No YAML configs, so I'm building it.
+
+**FineTune Studio** is a desktop app for fine-tuning large language models locally on Apple Silicon using MLX. It handles everything — downloading models from Hugging Face, preparing datasets, running LoRA/QLoRA training with live metrics, and chatting with your fine-tuned model — all through a visual interface.
+
+![](https://cdn-images-1.medium.com/max/800/1*o2u0ReOoItK5BVMwXgGqfQ.png)
+
+Here’s how it works, what I learned building it, and how you can do the same.
+
+### Why Local Fine-Tuning Matters
+
+The fine-tuning landscape in 2025 looks like this: you either pay for cloud GPUs, wrestle with notebook environments, or stitch together CLI tools with config files.
+
+But Apple Silicon changed the game. The M-series chips ship with unified memory — CPU and GPU share the same RAM. A MacBook Pro with 36GB of memory can fine-tune a 7B parameter model comfortably. The [MLX framework](https://github.com/ml-explore/mlx) from Apple’s ML research team makes this fast and memory-efficient.
+
+The missing piece was the interface. Training scripts exist. The tooling exists. But there’s no app that ties it all together into a workflow a human actually wants to use.
+
+That’s what I built.
+
+### The Stack
+
+FineTune Studio is an **Electron + React** app with a Python backend for ML operations.
+
+-   **Frontend**: React with hash-based routing, custom CSS design system, SVG charts
+-   **Backend**: Electron IPC bridge to Python scripts using `mlx-lm`
+-   **Training**: LoRA and QLoRA via Apple’s MLX framework
+-   **Inference**: Local model serving with `mlx-lm.server`
+-   **Models**: Direct download from Hugging Face Hub
+
+The architecture is intentionally simple. Electron spawns Python child processes for training and inference. IPC messages carry real-time metrics (loss, step count, tokens/sec) from the training loop back to the UI, where they render as live-updating charts and progress bars.
+
+### Step 1: Pick a Model
+
+The app connects directly to the Hugging Face Hub. You search for a model, and it shows you what’s available — name, size, download count.
+
+![](https://cdn-images-1.medium.com/max/800/1*BdRmeI1-LPJtD4fVJd8Sug.png)
+
+One click downloads the model to your local cache. The app tracks which models you’ve already downloaded so you don’t re-fetch anything.
+
+I focused on models that work well with MLX on consumer hardware:
+
+-   **Mistral 7B** — solid general-purpose, fits in 16GB
+-   **Llama 3.1 8B** — Meta’s latest, great instruction following
+-   **Phi-3 Mini** — Microsoft’s compact 3.8B, surprisingly capable
+-   **Gemma 2 9B** — Google’s open model, strong on benchmarks
+-   **Qwen 2.5** — excellent multilingual support
+
+The key constraint is memory. MLX loads models into unified memory, so your RAM is your VRAM. A 7B model in 4-bit QLoRA uses ~6GB. Full LoRA on the same model needs ~14GB. The app shows you these numbers before you commit.
+
+### Step 2: Prepare Your Dataset
+
+Training frameworks expect a very specific format: JSONL with a `messages` array containing `{role, content}` objects.
+
+FineTune Studio handles this automatically.
+
+![](https://cdn-images-1.medium.com/max/800/1*9u41e8hlhOG8mtmKFHSfkQ.png)
+
+When you import a dataset, the app detects its format:
+
+-   **Chat** — already has `messages` with roles, ready to train
+-   **Completions** — has `prompt`/`completion` pairs
+-   **Text** — raw text column for continued pre-training
+-   **Custom** — has other columns (like `instruction`, `input`, `output`)
+
+For custom formats, a **Convert** button opens a column-mapping modal.
+
+You map your columns to chat roles — which column is the user message, which is the assistant response, optionally a system prompt. A live preview shows exactly what the converted data looks like. Hit “Convert & Save” and you get a new `_chat.jsonl` file ready for training.
+
+![](https://cdn-images-1.medium.com/max/800/1*YjTUG-9B-ALzewdnil0zZA.png)
+
+The template mode is powerful for Alpaca-style datasets. If your data has `instruction` and `input` as separate columns, you write a template like `{instruction}\n\n{input}` and the app merges them into a single user message.
+
+### Step 3: Configure and Train
+
+The New Job wizard walks you through configuration with sensible defaults.
+
+![](https://cdn-images-1.medium.com/max/800/1*y9KCz7MZpTw3Tz_9vSrpeQ.png)
+
+Key parameters:
+
+-   **LoRA Rank** (default: 8) — higher = more capacity, more memory
+-   **LoRA Alpha** (default: 16) — scaling factor, usually 2x rank
+-   **Learning Rate** (default: 1e-5) — standard for LoRA fine-tuning
+-   **Epochs** (default: 1) — one pass is often enough for instruction tuning
+-   **Batch Size** (default: 1) — keep at 1 for memory-constrained setups
+-   **QLoRA** — 4-bit quantized training, cuts memory usage by ~60%
+
+The QLoRA toggle is the difference between “runs on a MacBook Air” and “needs a Mac Studio.” For most use cases, QLoRA produces nearly identical quality at a fraction of the memory cost.
+
+Hit **Start Training** and the job begins.
+
+### Step 4: Watch It Learn
+
+This is the part I’m most proud of. Training isn’t a black box.
+
+![](https://cdn-images-1.medium.com/max/800/1*PJxWKUI8GwY052cE3Dy5WA.png)
+
+The job detail view shows:
+
+-   **Live progress bar** with step count
+-   **Train loss** and **eval loss** updating in real time
+-   **Tokens per second** throughput
+-   **Elapsed time**
+-   **Loss curve chart** — train loss as a solid line, eval loss as dashed
+
+The loss chart is a custom SVG component. No charting library — just computed paths from the metrics stream. Every training step emits a metric event over IPC, and the chart re-renders with the new data point.
+
+![](https://cdn-images-1.medium.com/max/800/1*2KA_o_pCLSJW9epNhGswLQ.png)
+
+Watching the loss curve drop in real time is genuinely satisfying. You can see the exact moment your model starts learning your data.
+
+The jobs list gives you an overview of all your training runs. Each row shows the model name, status, latest loss, and a mini progress bar for running jobs. You can filter by status to find completed runs quickly.
+
+![](https://cdn-images-1.medium.com/max/800/1*EFwWq418-TDeDVNWOmRUNg.png)
+
+### Step 5: Chat With Your Model
+
+Once training completes, you have a LoRA adapter — a small file (typically 10–50MB) that modifies the base model’s behavior. The app can serve the fine-tuned model locally and give you a chat interface to test it.
+
+![](https://cdn-images-1.medium.com/max/800/1*IDfRTeBG-2xS-wXg08OmxA.png)
+
+You upload your data, train for 20 minutes, and now you’re chatting with a model that knows your domain. Customer support data becomes a support bot. Medical Q&A becomes a clinical assistant. Code examples become a specialized coding helper.
+
+### What I Learned Building This
+
+### Unified memory is a superpower
+
+Apple Silicon’s unified memory architecture means there’s no CPU-to-GPU data transfer bottleneck. A 7B model loads in seconds and trains at 40–60 tokens/sec on an M2 Pro. That’s not cloud-GPU speed, but it’s fast enough to iterate. A full epoch on 10K examples takes about 30 minutes.
+
+### LoRA makes local training practical
+
+Full fine-tuning a 7B model requires ~28GB just for the model weights, plus optimizer states. LoRA freezes the base model and only trains small adapter matrices — typically 0.1–1% of total parameters. QLoRA goes further by quantizing the frozen weights to 4-bit. The result: you can fine-tune a 7B model in 8GB of RAM.
+
+### Datasets are the hard part
+
+Model selection and hyperparameters matter, but the dataset is 90% of the outcome. I spent more time building the dataset pipeline — import, detect format, preview, convert, validate — than on the training UI. The column-mapping conversion alone handles dozens of edge cases: nested JSON objects, missing values, multi-column templates, various encodings.
+
+### Real-time feedback changes behavior
+
+When training is a CLI script that runs for an hour and prints a final loss number, you run it once and hope. When you see the loss curve live, you catch problems in minutes. Loss plateaued early? Stop and adjust the learning rate. Loss spiking? Your data might have issues. The visual feedback loop makes you a better practitioner.
+
+### Electron is fine, actually
+
+The Electron-haters will come for me, but for this use case it’s ideal. I need to spawn Python processes, manage file system state, and render a reactive UI. Electron gives me Node.js for process management and React for the interface. The app uses ~150MB of RAM — negligible next to the 8–14GB the model consumes during training.
+
+### The Architecture in Detail
+
+For those who want to build something similar, here’s how the pieces connect:
+
+![](https://cdn-images-1.medium.com/max/800/1*1JwaSGG9cfwjjrJFdsayHg.png)
+
+The Electron main process handles all system operations — file I/O, Python process spawning, Hugging Face API calls. The preload script exposes a `window.studio` API that the React frontend calls. Training metrics flow as JSON lines from Python's stdout through the IPC bridge into React state.
+
+### Getting Started
+
+If you want to try local fine-tuning on your Mac:
+
+1.  **Hardware**: Any Apple Silicon Mac. 16GB RAM minimum, 32GB+ recommended.
+2.  **Software**: Python 3.11+, Node.js 18+, the `mlx-lm` package.
+3.  **First model**: Start with **Phi-3 Mini** (3.8B) or **Mistral 7B** with QLoRA enabled. Both fit comfortably in 16GB.
+4.  **First dataset**: Grab any instruction-tuning dataset from Hugging Face — `tatsu-lab/alpaca` is a classic starting point. The app will auto-convert it.
+5.  **First run**: Default hyperparameters are solid. Just pick model, pick dataset, and click train.
+
+Your first fine-tuned model will be ready in under an hour. From there, it’s about the data — curate a dataset specific to your use case, and you’ll be surprised how quickly a 7B model adapts.
+
+### What’s Next
+
+I’m actively building:
+
+-   **Adapter management** — compare, merge, and version your LoRA adapters
+-   **Evaluation benchmarks** — automated quality scoring beyond just loss
+-   **Export to GGUF** — convert your fine-tuned model for use with Ollama and llama.cpp
+-   **Multi-GPU support** — distribute training across multiple Macs on a network
+
+The goal is to make fine-tuning as approachable as using a photo editor. You have the raw material (data), you have the tool (FineTune Studio), and the output is a model that does exactly what you need.
+
+GitHub link [https://github.com/bemijonathan/finetune-studio](https://github.com/bemijonathan/finetune-studio), it is still in active development !!

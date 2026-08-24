@@ -1,0 +1,136 @@
+---
+title: Customizing your code review experience with coderabbit.yml
+description: "CodeRabbit allows developers to customize your ai review review process by defining the settings in a coderabbit.yml file. This document provides a brief…"
+date: 2023-09-22
+updated: 2025-07-25
+slug: customizing-your-code-review-experience-with-coderabbit-yml
+topics: [notes]
+originalUrl: "https://gist.github.com/bemijonathan/8bc892b1e12954e45a906e0704cff86d"
+---
+# Customizing CI Code Review with CodeRabbit
+
+## Overview
+
+CodeRabbit allows developers to customize your ai review review process by defining the settings in a `coderabbit.yml` file. 
+This document provides a brief overview of the keys used in the `coderabbit.yml` file and their functions. please note that the default
+parameters in the schema will be used if values are not provided.
+
+## Sample `coderabbit.yml` File
+
+```yaml
+ignored_branch: "dev/test",
+ignored_titles: "WIP",
+limit_reviews_by_label: "WIP",
+path_filters: "!*.html",
+system_language: "us-EN",
+release_notes: false,
+ignore_draft_pr: true,
+enable_beta_features: true,
+disable_poem: true,
+file_path_instructions: 
+  - path: "**/*.go,**/*.js"
+    instructions: |
+      Be sure that the code is optimized to enable concurrency and follows the standard go guide, always point out all possible unhandled error case
+```
+
+## Key Definitions
+
+- `ignored_branch`: Specifies branches to be ignored during code review.
+- `ignored_titles`: Ignores pull requests with specified titles.
+- `limit_reviews_by_label`: Limits reviews to pull requests with specified labels.
+- `path_filters`: Excludes specified file types from review.
+- `system_language`: Sets system language.
+- `release_notes`: Enables or disables generation of release notes.
+- `ignore_draft_pr`: Specifies whether to ignore draft pull requests.
+- `enable_beta_features`: Enables or disables beta features.
+- `disable_poem`: Enables or disables generation of poems.
+- `file_path_instructions`: Provides specific instructions for certain file paths.
+
+## Schema Definition
+
+```yaml
+inputs:
+  ignore_draft_pr:
+    required: false
+    descripton: |
+      Specify if the draft PR needs to be ignored
+    default: true
+
+  release_notes:
+    required: false
+    description: |
+      Revision summary showing release notes
+    default: false
+
+  enable_beta_features:
+    required: false
+    description: |
+      Access our latest features as they become available in beta
+    default: false
+
+  disable_poem:
+    required: false
+    description: |
+      A short whimsical poem to celebrate the code changes
+    default: false
+
+  system_language:
+    required: true
+    description: |
+      Language in which pull requests will be reviewed.
+    default: "en-US"
+
+  ignored_branch:
+    required: false
+    description: |
+      Here you can specify a comma separated list of branches that should be ignored by Code Rabbit. You can use * as a wildcard.
+    default: ""
+
+  ignored_titles:
+    required: false
+    description: |
+      Here you can specify a comma separated list of snippets within the PR title that should be ignored by Code Rabbit. If the PR title contains any of the snippets, the comment will not be created.
+    default: ""
+
+  limit_reviews_by_label:
+    required: false
+    description: |
+      Comma-separated PR labels that the reviews should be limited to. Use this only if you want to limit the CodeRabbit reviews to a specific set of PRs
+    default: ""
+
+  path_filters:
+    required: false
+    description: |
+      The path filters, e.g., "src/**.py", "!dist/**", each line will be considered as one pattern.
+      See also
+
+      - https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#onpushpull_requestpull_request_targetpathspaths-ignore
+      - https://github.com/isaacs/minimatch
+    default: |
+      !dist/**
+      !**/*.app
+      !**/*.bin
+      !**/*.bz2
+      !**/*.class
+      !**/*.db
+      !**/*.csv, !.....
+  file_path_instructions:
+    required: false
+    description: file specipic instruction 
+```
+
+In the schema about:
+
+- `inputs`: Defines input parameters for the `coderabbit.yml` file.
+- `ignoreDraftPR`: Specifies whether to ignore draft pull requests.
+  - `required`: Indicates whether the key is required. Here, it is not (`false`).
+  - `description`: Provides a description of the key.
+  - `default`: Sets the default value for the key. Here, the default is `true`, meaning draft pull requests are ignored by default.
+  
+  
+
+By leveraging the customization capabilities of CodeRabbit, 
+developers can tailor their code review process to their specific needs and preferences. 
+This not only enhances the efficiency of the reviews but also improves the overall code quality. 
+The `coderabbit.yml` file serves as a powerful tool for defining the rules and parameters for the code review process, 
+making it an essential part of any CI pipeline.

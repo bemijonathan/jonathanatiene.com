@@ -44,7 +44,7 @@ export async function GET(request: Request) {
         >
           {title}
         </div>
-        <div style={{ fontSize: 24, color: "#6b6b68" }}>bemijonathan.com</div>
+        <div style={{ fontSize: 24, color: "#6b6b68" }}>jonathanatiene.com</div>
       </div>
     ),
     { width: 1200, height: 630 },

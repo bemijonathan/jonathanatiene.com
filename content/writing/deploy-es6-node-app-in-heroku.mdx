@@ -1,0 +1,19 @@
+---
+title: Deploy ES6 Node app in Heroku
+description: "It's very easy but relatively tricky all you have to do is customize the heroku build process by addi..."
+topics: ["Career / Engineering"]
+date: 2020-05-13
+slug: deploy-es6-node-app-in-heroku
+archived: true
+originalUrl: "https://dev.to/mixed_code/deploy-es6-node-app-in-heroku-161o"
+---
+It's very easy but relatively tricky all you have to do is customize the heroku build process by adding the following to your script in package.json
+
+```json
+"script": {
+  +"heroku-postbuild": "npm run build"
+}
+``` 
+the command above should compile your ES6 app using babel [read more here](https://devcenter.heroku.com/articles/nodejs-support#customizing-the-build-process)
+
+to set up your node js app in ES6 you can read my previous [post](https://dev.to/mixed_code/set-up-node-project-in-es6-2bla)

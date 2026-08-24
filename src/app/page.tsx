@@ -93,7 +93,7 @@ export default async function HomePage() {
           Occasional writing about intelligent systems, engineering and human behaviour.
         </p>
         <form
-          action="https://bemijonathan.substack.com/api/v1/free"
+          action={`${site.social.substack}/api/v1/free`}
           method="post"
           target="_blank"
           className="mt-6 flex max-w-md flex-col gap-3 sm:flex-row"
