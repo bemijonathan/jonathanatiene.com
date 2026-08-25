@@ -72,8 +72,7 @@ export const speakingTopics = [
   "Production AI Engineering",
   "AI Agents & Intelligent Systems",
   "AI Evaluation & Reliability",
-  "Human-Centred AI",
-  "Behavioural Science & AI",
+  "Open Models & Fine-Tuning",
   "The Evolution of the AI Engineer",
   "Applied AI Research",
 ];

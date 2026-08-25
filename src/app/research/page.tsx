@@ -19,8 +19,6 @@ export default function ResearchPage() {
         <ul className="mt-6 space-y-6 border-t border-border pt-6">
           {[
             { title: "Efficient Brain Tumour Segmentation", venue: "Thesis" },
-            { title: "Behavioural intelligence in agentic systems", venue: "Working paper" },
-            { title: "Agentic memory beyond retrieval", venue: "Technical report" },
           ].map((p) => (
             <li key={p.title} className="flex flex-col gap-1">
               <span className="font-serif text-xl text-foreground">{p.title}</span>

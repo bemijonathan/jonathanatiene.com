@@ -16,18 +16,17 @@ const expertise = [
   "Production AI engineering",
   "Agentic memory",
   "AI evaluation & reliability",
-  "Human-centred AI",
-  "Behavioural AI",
+  "Open models & fine-tuning",
 ];
 
 const shortBio =
-  "Jonathan Atiene is an AI engineer, researcher and writer. He builds and studies intelligent systems, and writes about AI agents, memory, human behaviour and the engineering required to make AI work in the real world.";
+  "Jonathan Atiene is an AI engineer, researcher and writer based in London. He builds and studies intelligent systems, and writes about AI agents, memory, evaluation, open models and the engineering required to make AI work in the real world.";
 
 const mediumBio =
-  "Jonathan Atiene is an AI engineer, researcher and writer working at the intersection of production AI, agentic systems and human behaviour. He originally trained in human anatomy and neuroscience before moving into software engineering, and later completed an MSc in Artificial Intelligence. He currently leads AI engineering at TrendMind and writes about the engineering, research and human questions emerging as software becomes AI-native.";
+  "Jonathan Atiene is a London-based AI engineer, researcher and writer working at the intersection of production AI, agentic systems and applied research. He originally trained in human anatomy and neuroscience before moving into software engineering, and later completed an MSc in Artificial Intelligence. He currently builds production AI systems at Hive Science and writes about the engineering and research questions emerging as software becomes AI-native.";
 
 const fullBio =
-  "Jonathan Atiene is an AI engineer, researcher and writer whose work sits between artificial intelligence, software engineering and human behaviour. He originally studied human anatomy and neuroscience at the University of Port Harcourt before moving into software engineering, where he spent several years building production backend, frontend, cloud and full-stack systems across companies including CodeRabbit, Oaks Lab and TrendMind. He later completed an MSc in Artificial Intelligence at De Montfort University, with thesis research on efficient brain-tumour segmentation using parameter sharing and pruning. Today he leads AI engineering at TrendMind — building agentic content systems around human-in-the-loop workflows — while writing and speaking publicly about production AI, agentic systems, evaluation, and the human questions raised by increasingly capable models. He publishes essays and research at jonathanatiene.com.";
+  "Jonathan Atiene is a London-based AI engineer, researcher and writer whose work sits between artificial intelligence, software engineering and applied research. He originally studied human anatomy and neuroscience at the University of Port Harcourt before moving into software engineering, where he spent several years building production backend, frontend, cloud and full-stack systems across companies including CodeRabbit, Oaks Lab and TrendMind. He later completed an MSc in Artificial Intelligence at De Montfort University, with thesis research on efficient brain-tumour segmentation using parameter sharing and pruning. Today he builds production AI systems at Hive Science — LLM agent harnesses, context and memory architectures, and the pipelines that make them reliable — while writing and speaking publicly about production AI, agentic systems, evaluation and open models. He publishes essays and research at jonathanatiene.com.";
 
 export default function PressPage() {
   return (

@@ -30,7 +30,10 @@ export function extractToc(source: string): TocHeading[] {
     if (!match) continue;
 
     const depth = match[1].length as 2 | 3;
-    const text = match[2].replace(/[*_`]/g, "").trim();
+    const text = match[2]
+      .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1")
+      .replace(/[*_`]/g, "")
+      .trim();
     if (!text) continue;
 
     headings.push({ depth, text, id: slugger.slug(text) });

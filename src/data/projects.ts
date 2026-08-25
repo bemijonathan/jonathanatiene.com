@@ -27,7 +27,7 @@ export const projects: Project[] = [
     problem:
       "Consistent, adaptive content across platforms is expensive to produce and hard to keep on-brand.",
     whyInteresting:
-      "It's an applied experiment in agentic workflows, content intelligence, platform adaptation, and behavioural signals — one product touching every part of production AI I care about.",
+      "It's an applied experiment in agentic workflows, content intelligence and platform adaptation — one product touching every part of production AI I care about.",
     learned:
       "The harness around a model — retrieval, memory, feedback, approvals — matters more than the model itself when reliability is the goal.",
     tags: ["AI", "Agentic Systems", "Product"],

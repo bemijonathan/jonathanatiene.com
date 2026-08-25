@@ -18,7 +18,8 @@ export function personJsonLd() {
       "AI Agents",
       "Agentic Memory",
       "Machine Learning",
-      "Human Behaviour",
+      "Open Models",
+      "Fine-Tuning",
       "Software Engineering",
     ],
   };

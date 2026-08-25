@@ -7,7 +7,7 @@ import { experience } from "@/data/experience";
 export const metadata: Metadata = {
   title: "About",
   description:
-    "Jonathan Atiene — AI engineer, researcher and writer. Building and studying intelligent systems at the intersection of engineering, research and human behaviour.",
+    "Jonathan Atiene — AI engineer, researcher and writer. Building and studying intelligent systems at the intersection of engineering and applied AI research.",
   alternates: { canonical: "/about" },
 };
 
@@ -18,7 +18,7 @@ export default function AboutPage() {
   return (
     <SectionPage
       title="About"
-      intro="I build and study intelligent systems, and write about AI agents, memory, human behaviour and the engineering required to make AI work in the real world."
+      intro="I build and study intelligent systems, and write about AI agents, memory, evaluation, open models and the engineering required to make AI work in the real world."
     >
       <div className="mb-12">
         <Image
@@ -48,7 +48,8 @@ export default function AboutPage() {
           several years building backend, frontend, cloud and production systems. That
           engineering foundation eventually led me deeper into machine learning, and I
           later completed an MSc in Artificial Intelligence. Today those fields overlap in
-          my work.
+          my work. I'm currently based in London, building production AI systems at
+          Hive Science.
         </p>
         <p>
           I'm interested not only in what models can do, but also in the infrastructure
@@ -67,17 +68,12 @@ export default function AboutPage() {
           human-in-the-loop systems.
         </p>
 
-        <h3>AI &amp; human behaviour</h3>
-        <p>
-          Exploring how cognitive science, behavioural research and product psychology can
-          inform the design of intelligent systems — trust, cognitive load, uncertainty,
-          decision-making, and how people respond to AI-generated recommendations.
-        </p>
-
         <h3>Applied AI research</h3>
         <p>
-          Practical machine-learning problems where model efficiency, intelligent systems,
-          neuroscience and real-world deployment intersect.
+          Practical machine-learning problems where model efficiency, intelligent systems
+          and real-world deployment intersect. Neuroscience and behavioural science show
+          up here as supporting lenses — useful when they genuinely inform how a system
+          should be built, evaluated or trusted, not as ends in themselves.
         </p>
 
         <h2>How I think</h2>

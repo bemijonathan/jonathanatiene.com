@@ -7,7 +7,7 @@ import { site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Talks",
   description:
-    "I speak about AI engineering, agentic systems, human-centred AI and the engineering questions emerging as software becomes AI-native.",
+    "I speak about AI engineering, agentic systems, open models and the engineering questions emerging as software becomes AI-native.",
   alternates: { canonical: "/talks" },
 };
 
@@ -23,7 +23,7 @@ export default function TalksPage() {
   return (
     <SectionPage
       title="Talks"
-      intro="I speak about the engineering and human questions emerging as software becomes AI-native — drawing from production AI, machine-learning research and behavioural science, with an emphasis on practical ideas engineers can apply."
+      intro="I speak about the engineering and research questions emerging as software becomes AI-native — drawing from production AI, agentic systems and open-model research, with an emphasis on practical ideas engineers can apply."
     >
       <section>
         <Label>Topics I speak about</Label>

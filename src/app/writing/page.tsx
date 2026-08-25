@@ -5,7 +5,7 @@ import { getAllArticles, getFeaturedArticles, getTopics, topicToSlug } from "@/l
 export const metadata: Metadata = {
   title: "Writing",
   description:
-    "Essays, technical notes and ideas about intelligent systems, engineering and human behaviour.",
+    "Essays, technical notes and ideas about intelligent systems, agents and the engineering behind them.",
   alternates: { canonical: "/writing" },
 };
 
@@ -22,8 +22,8 @@ export default async function WritingIndex() {
           Writing
         </h1>
         <p className="mt-4 font-serif text-lg text-muted">
-          Essays, technical notes and ideas about intelligent systems, engineering and human
-          behaviour.
+          Essays, technical notes and ideas about intelligent systems, agents and the
+          engineering behind them.
         </p>
       </header>
 

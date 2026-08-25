@@ -4,10 +4,22 @@ import { site } from "@/lib/site";
 
 const currentlyExploring = [
   "Agentic memory",
-  "Behavioural intelligence",
+  "Open-model fine-tuning",
   "AI system reliability",
-  "Human decision-making",
-  "Technical stylistics",
+  "Agent evaluation",
+  "Context engineering",
+];
+
+const workingWith = [
+  "Python",
+  "TypeScript",
+  "PyTorch",
+  "TensorFlow",
+  "Hugging Face",
+  "Pydantic",
+  "Qdrant",
+  "AWS",
+  "Terraform",
 ];
 
 export default async function HomePage() {
@@ -22,6 +34,9 @@ export default async function HomePage() {
           {site.name}
         </h1>
         <p className="mt-3 font-sans text-lg text-muted">{site.descriptor}</p>
+        <p className="mt-1 font-sans text-sm text-subtle">
+          London <span aria-label="United Kingdom">🇬🇧</span>
+        </p>
         <p className="mt-6 max-w-xl font-serif text-lg leading-relaxed text-foreground/90">
           {site.tagline}
         </p>
@@ -86,11 +101,21 @@ export default async function HomePage() {
         </ul>
       </section>
 
+      {/* Working with */}
+      <section className="mt-24">
+        <SectionLabel>Working with</SectionLabel>
+        <ul className="mt-6 flex flex-wrap gap-x-5 gap-y-2 font-sans text-sm text-muted">
+          {workingWith.map((t) => (
+            <li key={t}>{t}</li>
+          ))}
+        </ul>
+      </section>
+
       {/* Newsletter */}
       <section className="mt-24 border-t border-border pt-10">
         <SectionLabel>Essays in your inbox</SectionLabel>
         <p className="mt-4 max-w-xl font-serif text-lg text-muted">
-          Occasional writing about intelligent systems, engineering and human behaviour.
+          Occasional writing about intelligent systems, agents and the engineering behind them.
         </p>
         <form
           action={`${site.social.substack}/api/v1/free`}
