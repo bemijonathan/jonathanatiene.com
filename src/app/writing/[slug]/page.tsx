@@ -67,11 +67,15 @@ export default async function ArticlePage(
   const article = await getArticleBySlug(slug);
   if (!article) notFound();
 
-  const publishedDate = new Date(article.date).toLocaleDateString("en-GB", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
+  const formatDate = (iso: string) =>
+    new Date(iso).toLocaleDateString("en-GB", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
+  const publishedDate = formatDate(article.date);
+  const wasUpdated = !!article.updated && article.updated !== article.date;
+  const updatedDate = wasUpdated ? formatDate(article.updated!) : null;
 
   const toc = article.wordCount >= TOC_MIN_WORDS ? extractToc(article.content) : [];
   const related = await getRelatedArticles(article.slug, 3);
@@ -107,6 +111,14 @@ export default async function ArticlePage(
           {site.name}
           <span className="mx-2">·</span>
           <time dateTime={article.date}>{publishedDate}</time>
+          {wasUpdated ? (
+            <>
+              <span className="mx-2">·</span>
+              <span>
+                Updated <time dateTime={article.updated}>{updatedDate}</time>
+              </span>
+            </>
+          ) : null}
           <span className="mx-2">·</span>
           {article.readingTimeMinutes} min
         </p>
