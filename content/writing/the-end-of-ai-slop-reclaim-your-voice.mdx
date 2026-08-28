@@ -1,0 +1,123 @@
+---
+title: "The End of AI Slop: Engineering a Voice for AI-Assisted Writing"
+description: "I have been thinking about why AI writing feels perfect but strangely familiar, and whether we can represent our writing voice as a system instead of asking a model to guess it."
+topics: ["AI Engineering", "Writing"]
+date: 2026-08-25
+slug: the-end-of-ai-slop-reclaim-your-voice
+draft: true
+---
+
+I have been thinking about why so much AI writing feels boring. Not bad, just boring.
+
+The grammar is usually correct. The argument has an introduction, three reasonable points and a balanced conclusion. Yet after reading enough of it, you begin to notice the same rhythm, transitions and sometimes even the same opinions appearing everywhere.
+
+I think AI writing already has a voice. The problem is that many of us are beginning to use the same one.
+
+There is a reason for this beyond bad prompting. Large language models learn patterns that are broadly probable across an enormous mixture of human writing. Post-training then pushes them towards responses that are helpful, safe and generally acceptable. This makes them useful, but stylistically, the centre of the distribution is usually smoother than the edges.
+
+The edges are where the person often lives: an odd analogy, a recurring sentence rhythm, an unfashionable opinion, or an example they reach for because they were actually there.
+
+This matters because voice is not simply a decoration around an idea. Sometimes the voice is part of how the idea exists.
+
+My current thinking is that we can engineer around some of this. But to do that, we have to stop treating style as a vibe and start representing it as a system.
+
+## How the argument disappears
+
+The default writing style of most models is smooth, and smoothness is valuable when a sentence is confusing. The problem is that the same process can remove the analytical move that made the sentence worth reading in the first place.
+
+Imagine a researcher writing about Pakistan and the IMF. They might argue that Pakistan's geostrategic position has effectively become one of its most valuable exports. That sentence does more than describe a relationship; it turns geopolitics into political economy and makes sovereignty feel like something being priced.
+
+A model might smooth it into:
+
+> Pakistan remains a strategically important partner in regional affairs.
+
+This sentence is not false. It still carries the topic, but the argument has disappeared. It is so broadly acceptable that it has become harmless.
+
+This is not only my observation. A 2026 study in [Nature Human Behaviour](https://www.nature.com/articles/s41562-026-02550-0) examined more than 880,000 texts and found that LLM-assisted rewriting preserved core meaning while reducing variation in writing complexity by 21–50% across the datasets and models tested. It also weakened or shifted some linguistic signals associated with the original writer.
+
+Another study of 2,200 college admissions essays found that each additional human-written essay introduced more new ideas than an additional GPT-4 essay. Interestingly, the gap grew as the collection became larger ([Computers in Human Behavior: Artificial Humans](https://www.sciencedirect.com/science/article/pii/S294988212500091X)).
+
+Both findings point towards the same problem: a model can preserve what a piece is about while changing what makes it belong to someone. If millions of people ask the same models to “make this professional,” perhaps we should not be surprised when writing moves towards the same centre.
+
+The question, then, is not whether we should stop using AI for writing. I use it, and I find it valuable. The more interesting question is whether we can use it without allowing the model's average to become our voice.
+
+## Style is not one variable
+
+The standard solution is to give the model three old articles and say, “write like me.” This is better than giving it no examples, but I do not think it is enough.
+
+“Me” is not a specification. The model still has to decide which patterns are intentional, which ones are accidental and which parts of the examples it should ignore. To understand how I would represent style, I find it useful to break it into a stack:
+
+- **Rhythm:** how sentence lengths change and where the writing pauses.
+- **Punctuation:** the marks you return to and how the page feels.
+- **Vocabulary:** the words you choose and the corporate phrases you avoid.
+- **Syntax:** how you construct sentences and connect ideas.
+- **Semantics:** the metaphors, distinctions and frames you return to.
+- **Pragmatics:** what you assume about the reader and want them to question.
+- **Structure:** how you move from observation to mechanism, insight and implication.
+
+These layers are connected. A short sentence creates emphasis partly because of the longer sentence before it, while a metaphor can carry an argument rather than merely make the prose colourful.
+
+This is why most brand voice documents are weak instructions for a model. “Confident but approachable” or “expert but human” describes a feeling, but it says very little about the behaviour of the writing.
+
+A more useful profile might say:
+
+> Prefer short and medium sentences, but do not make every sentence dramatic. Start with a real observation, explain the mechanism, and use first person when it reveals the thinking. Avoid corporate AI language and do not manufacture certainty when an idea is still developing.
+
+Now the model has something concrete it can follow, and the writer has something they can inspect and disagree with.
+
+## Building a small voice dataset
+
+If I were building this system, I would start with a small, annotated dataset instead of an 80-page brand document. Ten to twenty strong passages can capture recurring moves: how an article opens, how a mechanism is explained and how an argument concludes.
+
+I would annotate those passages with simple notes:
+
+- This is how I introduce a technical problem.
+- This metaphor is doing analytical work.
+- This sounds perfect, but it does not sound like me.
+
+Counterexamples are important. The model needs to see the difference between writing that is clear and writing sterilised in the name of clarity.
+
+For example, consider this paragraph:
+
+> AI is transforming how businesses operate. It is not just a tool for improving efficiency, but a powerful force reshaping the future of work.
+
+There is nothing technically wrong with it, but it is interchangeable with several thousand other paragraphs. I would write:
+
+> Most companies will not experience AI as one dramatic transformation. It will arrive as a series of smaller decisions: which work should be automated, where a model needs human judgment, and what happens when the confident answer is wrong. The future of work is being shaped inside those decisions.
+
+The difference is not a synonym swap. The second version has a position, moves from an abstract claim to a mechanism, and contrasts the work with the story companies tell about it.
+
+This also reveals the limit: style can protect how a person develops an idea, but it cannot rescue a paragraph with no thought inside it. A model should not be responsible for inventing what you believe.
+
+## Separating the argument from the prose
+
+One mistake I have made is asking a single generation to understand the topic, choose a position, find evidence, build the structure, match my voice and produce a publishable draft. That is a lot of responsibility for one component.
+
+The result is usually a compromise. The argument becomes softer so the prose can remain smooth, while the examples become generic because the model is trying to satisfy every instruction at once.
+
+A 2025 EMNLP Findings paper on [complex text style transfer](https://aclanthology.org/2025.findings-emnlp.1166/) explores a similar problem. Separating planning, stylistic transformation and content-preservation checks improved performance where content and expression were entangled. The design principle is what stayed with me: decomposition reduces interference.
+
+For a writing system, I would separate the workflow into the following stages:
+
+1. State the core argument in plain language.
+2. Identify the claims that require evidence and build the structure.
+3. Draft without trying to make every sentence sound finished.
+4. Apply the style profile.
+5. Check that the style pass did not change the meaning.
+6. Ask a human to decide whether the piece deserves to exist.
+
+This is slower than asking for a complete article in one prompt, but it is closer to how good writing works. The position is protected before the prose is refined.
+
+## What trendmind.co taught me about judgment
+
+I used a similar separation when I built WritingAgents at trendmind, an agent that audited posts, drafted changes and generated articles based on personal brands.
+
+I think writing voice needs a similar boundary. Let the model propose language. Let the system check evidence, unwanted patterns and semantic drift. Then let a person decide whether the writing represents what they believe.
+
+That decision cannot be reduced to a style score. Sometimes the worst sentence is the actual intent.
+
+AI is already good at refinement. It can smooth a sentence, reorganise notes and find a gap in an explanation. I use it for all three. But refinement is not the actual substance, and perfect writing isn't valuable writing.
+
+So when I think about the end of AI slop, I do not imagine the end of AI-assisted writing. I imagine the end of treating the model's first acceptable draft as the work.
+
+Do not prompt for your voice. Engineer it.
