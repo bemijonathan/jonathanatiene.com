@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     default: `${site.name} — ${site.descriptor}`,
     template: `%s — ${site.name}`,
   },
-  description: site.tagline,
+  description: site.metaDescription,
   applicationName: site.name,
   authors: [{ name: site.name, url: site.url }],
   creator: site.name,
@@ -51,12 +51,12 @@ export const metadata: Metadata = {
     url: site.url,
     siteName: site.name,
     title: `${site.name} — ${site.descriptor}`,
-    description: site.tagline,
+    description: site.metaDescription,
   },
   twitter: {
     card: "summary_large_image",
     title: `${site.name} — ${site.descriptor}`,
-    description: site.tagline,
+    description: site.metaDescription,
     creator: "@bemijonathan",
   },
   robots: {

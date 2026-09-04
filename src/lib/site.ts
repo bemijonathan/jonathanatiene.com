@@ -1,11 +1,13 @@
 export const site = {
   name: "Jonathan Atiene",
-  descriptor: "AI engineer, researcher and writer.",
+  descriptor: "Senior AI engineer specialising in production LLM and agentic systems.",
   tagline:
-    "I build and study intelligent systems, and write about AI agents, memory, evaluation, open models and the engineering required to make AI work in the real world.",
+    "I architect and ship agent harnesses, RAG and reranking pipelines, context and memory systems, evaluation frameworks, structured outputs, tool orchestration and human-in-the-loop workflows. My work spans Llama fine-tuning and deep-learning research through to Python and TypeScript platforms on AWS.",
+  metaDescription:
+    "Senior AI engineer building production LLM and agentic systems, RAG pipelines, model fine-tuning, evaluation and AI infrastructure.",
   url: "https://jonathanatiene.com",
   locale: "en_US",
-  email: "bemijonathan.softwares@gmail.com",
+  email: "bemijonathan@gmail.com",
   social: {
     github: "https://github.com/bemijonathan",
     x: "https://x.com/bemijonathan",

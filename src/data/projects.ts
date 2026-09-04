@@ -18,6 +18,38 @@ export type Project = {
 
 export const projects: Project[] = [
   {
+    slug: "askhook",
+    title: "AskHook",
+    type: "Product",
+    date: "2025",
+    summary:
+      "A social-intelligence platform that analyses more than 500 short-form videos in minutes, distinguishes organic virality from paid promotion, and turns winning patterns into usable content decisions.",
+    problem:
+      "Trend data shows what moved, but rarely explains whether a pattern was earned, bought, or repeatable.",
+    whyInteresting:
+      "The agentic harness has to coordinate large-volume multimodal analysis, preserve evidence, and reduce noisy observations into decisions a strategist can defend.",
+    learned:
+      "At this scale, orchestration and recovery paths matter as much as analysis quality. A useful agent needs to know what completed, what failed, and what evidence supports each conclusion.",
+    tags: ["Agentic Systems", "Multimodal AI", "Structured Outputs"],
+    featured: true,
+  },
+  {
+    slug: "neurochecklists",
+    title: "Axon · Neurochecklists",
+    type: "Product",
+    date: "2025",
+    summary:
+      "An evidence-grounded neurology agent that searches and reranks more than 70,000 clinical checklist records to return structured, cited answers in under 2.5 seconds.",
+    problem:
+      "Clinicians and researchers need precise answers from a large specialist corpus without losing provenance, privacy, or time.",
+    whyInteresting:
+      "This is retrieval under real constraints: relevance is not enough unless the answer is fast, traceable to evidence, and shaped for a high-stakes workflow.",
+    learned:
+      "Good RAG depends on the representation and reranking strategy around the vector store, not simply the choice of embedding model.",
+    tags: ["RAG", "Healthcare AI", "Reranking", "Privacy"],
+    featured: true,
+  },
+  {
     slug: "trendmind",
     title: "TrendMind",
     type: "Product",

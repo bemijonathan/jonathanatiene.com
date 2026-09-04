@@ -60,7 +60,7 @@ export default function ProjectsPage() {
                   {p.whyInteresting ? (
                     <div>
                       <dt className="font-sans text-xs uppercase tracking-widest text-subtle">
-                        Why it's interesting
+                        Why it&apos;s interesting
                       </dt>
                       <dd className="mt-1 font-serif text-base text-muted">
                         {p.whyInteresting}

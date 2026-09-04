@@ -9,21 +9,21 @@ export type Experience = {
 
 export const experience: Experience[] = [
   {
-    title: "Senior Full Stack AI Engineer",
-    company: "Hive Science",
-    location: "London",
-    period: "Nov 2025 – Present",
+    title: "Senior AI Engineer",
+    company: "HiveScience AI",
+    location: "Remote",
+    period: "Oct 2025 – Present",
     summary:
-      "Building the AI platform end-to-end — LLM agent harnesses, context and memory architectures, and serverless data pipelines on AWS (Python, TypeScript, Pydantic, Qdrant, Terraform). Lifted processing throughput from ~20 jobs/month to 60+/week through automation and orchestration.",
+      "Architected a patent-pending ML environment and production agent harness spanning context, memory, tools, structured outputs and recovery. Scaled processing from roughly 20 runs a month to more than 60 a week, helping revenue grow by over 100%.",
     type: "work",
   },
   {
-    title: "Lead AI Engineer",
+    title: "Co-founder & AI Engineer",
     company: "TrendMind",
     location: "Remote",
-    period: "Oct 2024 – Oct 2025",
+    period: "Oct 2024 – Present",
     summary:
-      "Architected an AI platform end-to-end — structured content strategy, agentic workflows with retrieval, real-time engagement analytics, and human-in-the-loop approval. Lifted engagement metrics ~20%.",
+      "Built a multi-agent content platform with human approval, retrieval, analytics and model fine-tuning workflows. Reduced strategy planning time by 25% while taking features from first implementation through deployment.",
     type: "work",
   },
   {

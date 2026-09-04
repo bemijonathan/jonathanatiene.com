@@ -2,24 +2,66 @@ import Link from "next/link";
 import { getFeaturedArticles, getLatestArticles } from "@/lib/content";
 import { site } from "@/lib/site";
 
+const skills = [
+  {
+    area: "LLM and agent architecture",
+    expertise:
+      "Production agent harnesses, multi-agent workflows, LangGraph state graphs, tool orchestration, Pydantic-validated structured outputs, context windows, long-term memory, human approval gates and failure recovery.",
+  },
+  {
+    area: "Retrieval and knowledge systems",
+    expertise:
+      "RAG pipelines, vector retrieval with Qdrant, query and document representation, reranking, citation grounding and knowledge graphs—including retrieval across more than 70,000 clinical records.",
+  },
+  {
+    area: "Language models and fine-tuning",
+    expertise:
+      "Llama 3B fine-tuning with PyTorch, Hugging Face and Vertex AI; dataset preparation, synthetic-data pipelines, prompt and context optimisation, and open-model inference workflows.",
+  },
+  {
+    area: "Deep learning and model efficiency",
+    expertise:
+      "RAAGR²-Net brain-tumour segmentation, model pruning, weight sharing and parameter-efficiency research focused on reducing model size and deployment cost without losing useful performance.",
+  },
+  {
+    area: "Evaluation and reliability",
+    expertise:
+      "Agent evaluation, red teaming, Langfuse tracing, schema validation, evidence checks, observability and recovery paths for long-running model and tool workflows.",
+  },
+  {
+    area: "AI platform engineering",
+    expertise:
+      "Python, TypeScript, Node.js, PostgreSQL, AWS Glue, serverless AWS services, GCP, Docker, Terraform, CI/CD and scalable data and ML pipelines.",
+  },
+];
+
+const selectedSystems = [
+  {
+    name: "HiveScience AI",
+    title: "Audience intelligence at enterprise scale",
+    summary:
+      "A patent-pending ML environment for Fortune 500 teams, with a production agent harness spanning context, memory, tool orchestration, structured outputs, validation and failure recovery.",
+  },
+  {
+    name: "Axon · Neurochecklists",
+    title: "Evidence-grounded answers for neurology",
+    summary:
+      "A privacy-conscious RAG agent that searches and reranks more than 70,000 clinical checklist records to return structured, cited answers in under 2.5 seconds.",
+  },
+  {
+    name: "AskHook",
+    title: "Social intelligence from short-form video",
+    summary:
+      "An agentic system that distinguishes organic virality from paid promotion and turns patterns across more than 500 content pieces into actionable ideas in minutes.",
+  },
+];
+
 const currentlyExploring = [
   "Agentic memory",
   "Open-model fine-tuning",
   "AI system reliability",
   "Agent evaluation",
   "Context engineering",
-];
-
-const workingWith = [
-  "Python",
-  "TypeScript",
-  "PyTorch",
-  "TensorFlow",
-  "Hugging Face",
-  "Pydantic",
-  "Qdrant",
-  "AWS",
-  "Terraform",
 ];
 
 export default async function HomePage() {
@@ -35,17 +77,20 @@ export default async function HomePage() {
         </h1>
         <p className="mt-3 font-sans text-lg text-muted">{site.descriptor}</p>
         <p className="mt-1 font-sans text-sm text-subtle">
-          London <span aria-label="United Kingdom">🇬🇧</span>
+          United Kingdom <span aria-label="United Kingdom">🇬🇧</span>
         </p>
         <p className="mt-6 max-w-xl font-serif text-lg leading-relaxed text-foreground/90">
           {site.tagline}
         </p>
         <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm">
           <Link
-            href="/writing"
+            href="/projects"
             className="text-accent underline decoration-1 underline-offset-4 hover:text-accent-hover"
           >
-            Read my writing →
+            See selected systems →
+          </Link>
+          <Link href="/writing" className="text-muted hover:text-foreground">
+            Read my writing
           </Link>
           <Link href="/about" className="text-muted hover:text-foreground">
             About me
@@ -53,10 +98,25 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* Skills */}
+      <section className="mt-24">
+        <SectionLabel>Deep technical skills</SectionLabel>
+        <ul className="mt-6 divide-y divide-border border-y border-border">
+          {skills.map((skill) => (
+            <li key={skill.area} className="py-5">
+              <p className="font-serif text-xl text-foreground">{skill.area}</p>
+              <p className="mt-1 font-serif text-base leading-relaxed text-muted">
+                {skill.expertise}
+              </p>
+            </li>
+          ))}
+        </ul>
+      </section>
+
       {/* Featured */}
       {featured ? (
         <section className="mt-24">
-          <SectionLabel>Featured</SectionLabel>
+          <SectionLabel>Featured writing</SectionLabel>
           <Link href={`/writing/${featured.slug}`} className="group mt-4 block">
             <h2 className="font-serif text-3xl leading-tight tracking-tight text-foreground transition-colors group-hover:text-accent">
               {featured.title}
@@ -91,22 +151,42 @@ export default async function HomePage() {
         </section>
       ) : null}
 
+      {/* Selected systems */}
+      <section className="mt-24">
+        <SectionLabel>Selected systems</SectionLabel>
+        <p className="mt-4 max-w-2xl font-serif text-lg leading-relaxed text-muted">
+          My strongest work sits in the engineering around the model: context, memory,
+          retrieval, tools, evaluation, infrastructure and human review.
+        </p>
+        <ul className="mt-8 space-y-10 border-t border-border pt-8">
+          {selectedSystems.map((project) => (
+            <li key={project.name}>
+              <p className="font-sans text-xs uppercase tracking-widest text-accent">
+                {project.name}
+              </p>
+              <h2 className="mt-2 font-serif text-2xl leading-snug text-foreground">
+                {project.title}
+              </h2>
+              <p className="mt-3 max-w-2xl font-serif text-lg leading-relaxed text-muted">
+                {project.summary}
+              </p>
+            </li>
+          ))}
+        </ul>
+        <Link
+          href="/projects"
+          className="mt-8 inline-block text-sm text-accent underline decoration-1 underline-offset-4 hover:text-accent-hover"
+        >
+          View all projects →
+        </Link>
+      </section>
+
       {/* Currently exploring */}
       <section className="mt-24">
         <SectionLabel>Currently exploring</SectionLabel>
         <ul className="mt-6 flex flex-wrap gap-x-6 gap-y-2 font-serif text-lg text-foreground/90">
           {currentlyExploring.map((topic) => (
             <li key={topic}>{topic}</li>
-          ))}
-        </ul>
-      </section>
-
-      {/* Working with */}
-      <section className="mt-24">
-        <SectionLabel>Working with</SectionLabel>
-        <ul className="mt-6 flex flex-wrap gap-x-5 gap-y-2 font-sans text-sm text-muted">
-          {workingWith.map((t) => (
-            <li key={t}>{t}</li>
           ))}
         </ul>
       </section>

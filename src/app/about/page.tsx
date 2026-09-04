@@ -7,7 +7,7 @@ import { experience } from "@/data/experience";
 export const metadata: Metadata = {
   title: "About",
   description:
-    "Jonathan Atiene — AI engineer, researcher and writer. Building and studying intelligent systems at the intersection of engineering and applied AI research.",
+    "Jonathan Atiene — senior AI engineer, researcher and builder of production agentic systems.",
   alternates: { canonical: "/about" },
 };
 
@@ -18,7 +18,7 @@ export default function AboutPage() {
   return (
     <SectionPage
       title="About"
-      intro="I build and study intelligent systems, and write about AI agents, memory, evaluation, open models and the engineering required to make AI work in the real world."
+      intro="I build production AI systems, study what makes them dependable, and write about the engineering decisions hidden behind the demo."
     >
       <div className="mb-12">
         <Image
@@ -33,7 +33,7 @@ export default function AboutPage() {
 
       <div className="prose">
         <p>
-          I'm an AI engineer, researcher and software builder interested in one broad
+          I&apos;m a senior AI engineer, researcher and software builder interested in one broad
           question:
         </p>
         <p>
@@ -48,11 +48,11 @@ export default function AboutPage() {
           several years building backend, frontend, cloud and production systems. That
           engineering foundation eventually led me deeper into machine learning, and I
           later completed an MSc in Artificial Intelligence. Today those fields overlap in
-          my work. I'm currently based in London, building production AI systems at
-          Hive Science.
+          my work. I&apos;m currently based in London, building production AI systems at
+          HiveScience AI.
         </p>
         <p>
-          I'm interested not only in what models can do, but also in the infrastructure
+          I&apos;m interested not only in what models can do, but also in the infrastructure
           around them — how we evaluate their behaviour, how they interact with existing
           software systems, and how humans interpret and make decisions with their
           outputs.
@@ -84,7 +84,7 @@ export default function AboutPage() {
             trusted in production?
           </li>
           <li>
-            <strong>Researcher</strong> — what evidence supports the assumptions we're
+            <strong>Researcher</strong> — what evidence supports the assumptions we&apos;re
             making?
           </li>
           <li>
