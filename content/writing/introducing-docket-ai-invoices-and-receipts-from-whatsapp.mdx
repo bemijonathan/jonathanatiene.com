@@ -1,0 +1,79 @@
+---
+title: "Introducing Docket AI: Invoices, Quotes and Receipts from WhatsApp"
+description: "I built Docket AI so small businesses can create branded invoices, quotes, receipts, agreements and delivery notes by sending a WhatsApp message."
+topics: ["AI Engineering", "Agentic Systems"]
+date: 2026-09-29
+slug: introducing-docket-ai-invoices-and-receipts-from-whatsapp
+image: /images/docket/landing.webp
+draft: true
+---
+
+![Docket AI landing page: create invoices and receipts from WhatsApp](/images/docket/landing.webp)
+
+Today I'm launching [Docket AI](https://docketbusiness.com/).
+
+Docket AI is for small businesses that already run on WhatsApp. You set your business up once. After that, you tell Docket what you need in a WhatsApp message, and it sends back a branded, numbered document you can hand straight to your customer.
+
+It handles five kinds of document:
+
+- Invoices
+- Quotes
+- Receipts
+- Agreements
+- Delivery notes
+
+There's no card required, and setup takes about two minutes.
+
+### Why I built it
+
+{/* TODO: Your story goes here. Who did you see struggling with this? What were they using before (paper, Word templates, spreadsheets)? What made WhatsApp the right place to build it? */}
+
+A lot of small businesses already do their selling on WhatsApp: the plumber, the hairdresser, the home baker. The chat with the customer happens there. The paperwork usually doesn't, and that gap is what Docket fills.
+
+### How it works
+
+#### 1. Set up your business once
+
+After you sign up with your phone number, you add your business details and choose a template. Every document Docket makes after that carries your branding and gets numbered in sequence automatically.
+
+#### 2. Ask for a document on WhatsApp
+
+This is the core of the product. You message Docket the way you'd message an assistant. Here I asked it to draft a sales agreement for a hospital:
+
+![A WhatsApp conversation with Docket AI that ends with a generated sales agreement PDF](/images/docket/whatsapp-agreement.webp)
+
+Here's what happens in that conversation:
+
+1. I ask for "an agreement for a hospital for selling 5 hospital equipments".
+2. Docket doesn't guess. It asks for the details a sales agreement needs: the buyer's name and address, the seller, the items, the effective date, the payment terms and any special clauses.
+3. I reply in plain, slightly messy language: "Gertrude's hospital, 3 distilled gallons of water, 20 scalpel, effective today and confidential".
+4. Docket reads back what it understood, including a confidentiality clause, and asks for the one thing still missing: the seller and the payment terms.
+5. I say "That's fine send the psf" (typo included), and it replies with `AGR-0001-v1.pdf`, ready to download and forward.
+
+I never filled in a form. The whole exchange took about two minutes.
+
+{/* TODO: Add a screenshot of the generated PDF here if you have one. */}
+
+#### 3. Everything is saved to your workspace
+
+Every document you create on WhatsApp is also saved to your Docket workspace on the web. The dashboard shows how many documents you've made, grouped by type, along with drafts and what you created this month.
+
+![Docket AI dashboard showing quick stats and documents made in the last 7 days](/images/docket/dashboard.webp)
+
+From the workspace you can also manage your **Documents**, **Customers**, **Templates** and **Business settings**.
+
+#### 4. Or chat with Docket on the web
+
+If you're at a laptop, the same assistant is available in the browser. Docket chat can create an invoice, quote or receipt, add or find a customer, update an existing document, edit a saved template, or build a template from an image of one you already use.
+
+![Docket chat in the web app, with suggested actions like creating an invoice, adding a customer and building a template from an image](/images/docket/web-chat.webp)
+
+Docket remembers each chat, so you can start a separate conversation for each customer, document or task and come back to it later.
+
+### How it's built
+
+{/* TODO: A short technical section. For example: the WhatsApp Business API integration, how the agent decides what to ask before it generates anything, PDF generation, and how templates are extracted from an image. */}
+
+### Try it
+
+If you run a business on WhatsApp, [start free with your number](https://docketbusiness.com/). I'd love to hear what you make with it and what's missing.
