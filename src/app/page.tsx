@@ -154,6 +154,12 @@ export default async function HomePage() {
               ))}
             </ul>
           ) : null}
+          <Link
+            href="/writing"
+            className="mt-8 inline-block text-sm text-accent underline decoration-1 underline-offset-4 hover:text-accent-hover"
+          >
+            View all articles →
+          </Link>
         </section>
       ) : null}
 
