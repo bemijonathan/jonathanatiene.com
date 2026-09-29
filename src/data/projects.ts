@@ -18,6 +18,22 @@ export type Project = {
 
 export const projects: Project[] = [
   {
+    slug: "docket-ai",
+    title: "Docket AI",
+    type: "Product",
+    date: "2026",
+    summary:
+      "A WhatsApp-native assistant that lets small businesses create branded, numbered invoices, quotes, receipts, agreements and delivery notes by sending a message.",
+    problem:
+      "Small businesses sell on WhatsApp, but the paperwork — invoices, receipts, agreements — still happens somewhere else, often by hand.",
+    whyInteresting:
+      "The agent works inside a chat people already use: it asks for missing details instead of guessing, turns messy messages into structured documents, and keeps every document in a web workspace.",
+    tags: ["Agentic Systems", "WhatsApp", "Structured Outputs", "Product"],
+    image: "/images/docket/landing.webp",
+    link: "https://docketbusiness.com",
+    featured: true,
+  },
+  {
     slug: "askhook",
     title: "AskHook",
     type: "Product",
