@@ -1,0 +1,66 @@
+---
+title: "The Next Phase of Software Engineering: Every User Gets a Lab"
+description: "A prediction: software stops being one product shipped to everyone and becomes a personal build per user, and software engineering moves to the factory that produces it."
+topics: ["AI Engineering", "Agentic Systems"]
+date: 2026-09-30
+slug: the-next-phase-of-software-engineering
+image: /images/software-labs/strategy-composer.webp
+---
+
+I have been thinking about what comes after "add AI to the product". My current guess is labs.
+
+By a lab I mean a space inside an application where the user doesn't just configure the software, they program it. Not in the traditional sense of opening an editor, but by describing what they want, reviewing what gets built and deciding whether it runs.
+
+We are already seeing the early version of this. Most AI products now let you pick a model. Some let you set a personality, write custom instructions or toggle tools. That looks like a small thing, almost cosmetic. I don't think it is. It is the first time many products have handed users a real input into how the software behaves, rather than a fixed list of settings someone else decided on.
+
+The jump from "change the AI's tone" to "ask the AI to add a feature to my copy of the app" is not as far as it looks.
+
+## An example: a trading lab
+
+Here is a concept I put together to make the idea concrete. It is a strategy composer for trading agents.
+
+![A strategy composer: a chat with a planning and coding agent on the left, a strategy graph and YAML spec in the middle, and a deployment gate on the right](/images/software-labs/strategy-composer.webp)
+
+The user asks, in plain English, for an NVDA agent: use RSI and volume as features, XGBoost for a probability and a final judge model to make the call, evaluated every 15 minutes.
+
+A planning agent turns that into a spec and waits. No code is written until the user approves it. A coding agent then writes the strategy in its own worktree, asks permission before pulling in a package outside the approved environment, and runs the tests. When the user says "change max trades to 3 and the threshold to 0.72", the agent doesn't edit the running version. v17 is deployed and locked, so it creates v18 with both changes and re-runs everything.
+
+On the right is the part I find most interesting: a deployment gate. It checks that the thing is safe to run, not that it is profitable. Does it build? Do the tests pass? Does it read future bars by accident? Is there a runaway order loop? Are the risk limits held? Only then can the user deploy it to a paper account.
+
+The person using this is not a software engineer. They are a trader, a subject matter expert. They know what a good strategy looks like far better than the team that built the platform does. The lab lets them express that knowledge directly as software, while the platform decides what they are allowed to break.
+
+## Software per user
+
+If you follow that pattern outwards, you end up somewhere strange: software products made per user.
+
+Today we build one application and ship it to everyone. Personalisation means a recommendation feed or a settings page. Everyone runs the same code with different data.
+
+In a lab-shaped world, the code itself diverges. My copy of the product has the features I asked for. Yours has different ones. A clinic's version of a scheduling app has rules no other clinic needs. A trader's version of the platform above runs strategies nobody else has.
+
+You can see the infrastructure for this starting to appear. Companies like [Instacloud](https://www.instacloud.com/) and [boxd](https://boxd.sh) are, in different ways, making it cheap to give someone their own small cloud machine. It is not exactly what I'm describing, but the direction is the same: every user gets a tiny, isolated environment where their version of the software can live and change without touching anyone else's.
+
+## So what do software engineers do?
+
+If users are programming their own copies, it is fair to ask what is left for us.
+
+I think the job moves one level up. Instead of building the product, we build the factory that produces a product for each user. That factory has parts we already understand, just pointed at a new problem:
+
+- **The spec layer.** Turning a vague request into something precise enough to review and approve before any code exists.
+- **The sandbox.** Where generated code runs: no network, no secrets, only approved dependencies.
+- **Versioning and lineage.** Nothing deployed is ever edited in place. Every change is a new version you can diff, compare and roll back.
+- **The gate.** Tests, leakage checks, limits, security scans; the domain-specific rules that decide whether a user's build is allowed to run.
+- **The runtime.** The platform-owned pieces users can't override, like the risk engine in the example that caps position size no matter what the strategy asks for.
+
+The interesting engineering is no longer in any single feature. It is in making it safe and cheap for thousands of people to each have their own.
+
+## Where I'm unsure
+
+This is a prediction, not a plan, and there are good reasons it might not play out cleanly.
+
+Most people don't want to program their software, even in English. They want it to work. Labs may stay a power-user feature for experts in domains like trading, analytics or operations, where the payoff of customisation is high and the user already thinks in rules.
+
+Divergence is also expensive. Every user running different code means every bug report is about a slightly different product. Support, upgrades and security all get harder, and the factory has to absorb that cost or it falls onto the user.
+
+And there is the question of what happens when the platform itself changes. If I've built on top of v17 of your product and you ship a breaking change, whose job is it to migrate my copy? Probably another agent's, which is its own problem.
+
+Still, I think the direction is right. The settings page was the first time users got a say in how software behaves. The lab is the next one. And if that happens, most of us won't be writing the software people use. We'll be writing the thing that writes it.
