@@ -37,6 +37,12 @@ const skills = [
 
 const selectedSystems = [
   {
+    name: "Docket AI",
+    title: "Business documents from a WhatsApp message",
+    summary:
+      "A WhatsApp-native agent that turns plain messages into branded invoices, quotes, receipts, agreements and delivery notes, asking for missing details before it generates anything.",
+  },
+  {
     name: "HiveScience AI",
     title: "Audience intelligence at enterprise scale",
     summary:
@@ -148,6 +154,12 @@ export default async function HomePage() {
               ))}
             </ul>
           ) : null}
+          <Link
+            href="/writing"
+            className="mt-8 inline-block text-sm text-accent underline decoration-1 underline-offset-4 hover:text-accent-hover"
+          >
+            View all articles →
+          </Link>
         </section>
       ) : null}
 
